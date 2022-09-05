@@ -1,24 +1,22 @@
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {navsConfig} from './navsConfig';
-import {} from '/#/navigation';
-type RootStackParamList = {
-  Home: undefined;
-  Profile: {userId: string};
-  Feed: {sort: 'latest' | 'top'} | undefined;
-};
-const Stack = createNativeStackNavigator();
+import React from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Text, View } from 'react-native';
+import { navsConfig } from './navsConfig';
+import { RootStackParamList, NativeStackScreenItemProps } from '/#/navigation';
+import BottomTabs from './BottomTabs';
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function StackNavs() {
   return (
-    <Stack.Navigator>
-      {navsConfig.map(function (v) {
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      {navsConfig.map(function (v, index) {
         return (
           <Stack.Screen
-            key={v.key}
+            key={index}
             name={v.name}
             component={v.component}
-            options={{headerShown: !v.hideNav}}
-          />
+            options={v.option}></Stack.Screen>
         );
       })}
     </Stack.Navigator>

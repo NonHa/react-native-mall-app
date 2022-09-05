@@ -13,12 +13,7 @@
     "target": "esnext",
     "baseUrl": ".",
     "paths": {
-      "@": ["./src/*"],
-      "@/utils/*": ["./src/utils/*"],
-      "@/styles/*": ["./src/styles/*"],
-      "@/actions/*": ["./src/actions/*"],
-      "@/components/*": ["./src/components/*"],
-      "@/services/*": ["./src/services/*"],
+      "/@/*": ["src/*"],
       "/#/*": ["types/*"]
     }
   },
