@@ -40,7 +40,7 @@ export type ScreenProps = {
   };
 };
 export type BottomScreenProps = {
-  name: keyof RootStackParamList;
+  name: string;
   component: React.ComponentType;
   option?: BottomTabNavigationOptions;
 };
