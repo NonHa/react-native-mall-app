@@ -10,6 +10,8 @@ import New from './info/new';
 import Hot from './info/hot';
 import Subject from './info/subject';
 import Love from './info/love';
+
+import { getHome } from '../../api/index';
 import type { SwiperItem } from '../../components/Swiper/type';
 
 const styles = StyleSheet.create({
@@ -59,7 +61,10 @@ export default class Home extends React.Component {
   constructor(props: any) {
     super(props);
   }
-
+  componentDidMount() {
+    const data = getHome();
+    console.log('data', data);
+  }
   render() {
     return (
       <ScrollView>
