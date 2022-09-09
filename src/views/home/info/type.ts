@@ -10,3 +10,7 @@ export type InfoProps = {
   children?: React.ReactNode;
   showBottom?: boolean;
 };
+
+export interface ProductProps {
+  brandList: { name: string; id: number; productCount: number; bigPic: string }[];
+}

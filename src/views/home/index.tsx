@@ -13,7 +13,7 @@ import Love from './info/love';
 
 import { getHome, getBrand } from '../../api/home';
 import type { SwiperItem } from '../../components/Swiper/type';
-
+import { ProductProps } from './info/type';
 const styles = StyleSheet.create({
   container: {
     height: 200,
@@ -57,7 +57,7 @@ const slides: SwiperItem[] = [
     component: <Text style={styles.text}>Hello Swiper3</Text>,
   },
 ];
-export default class Home extends React.Component {
+export default class Home extends React.Component<any, ProductProps> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -66,7 +66,6 @@ export default class Home extends React.Component {
   }
   componentDidMount() {
     getBrand({ page: 1, pageSize: 5 }).then((res) => {
-      console.log('res==>brand', res);
       this.setState({
         brandList: res.data.list,
       });
