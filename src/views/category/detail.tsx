@@ -5,17 +5,6 @@ export default class Detail extends React.Component {
   constructor(props: any) {
     super(props);
     this.state = {
-      list: [
-        {
-          name: '锅具',
-        },
-        {
-          name: '刀叉',
-        },
-        {
-          name: '杯壶',
-        },
-      ],
       select: '服装',
     };
     this._press = this._press.bind(this);
@@ -26,7 +15,7 @@ export default class Detail extends React.Component {
     });
   }
   render() {
-    const mapList = this.state.list.map((v, index) => {
+    const mapList = this.props.detailList.map((v, index) => {
       return (
         <TouchableHighlight
           key={index}

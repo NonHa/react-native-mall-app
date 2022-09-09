@@ -1,43 +1,33 @@
 import React from 'react';
 import { Text, View, StyleSheet, TouchableHighlight } from 'react-native';
+import { getProductList } from '../../api/category';
 
 export default class CategoryList extends React.Component {
   constructor(props: any) {
     super(props);
     this.state = {
-      list: [
-        {
-          name: '服装',
-        },
-        {
-          name: '餐具',
-        },
-        {
-          name: '配件',
-        },
-        {
-          name: '居家',
-        },
-        {
-          name: '洗护',
-        },
-        {
-          name: '婴童',
-        },
-        {
-          name: '杂货',
-        },
-        {
-          name: '饮食',
-        },
-      ],
+      list: [],
       select: '服装',
     };
     this._press = this._press.bind(this);
   }
   _press(item) {
-    this.setState({
+    this.setState(() => ({
       select: item.name,
+    }));
+    this.props.getDetail(item.id);
+  }
+  componentDidMount() {
+    getProductList({
+      page: 1,
+      pageSize: 10,
+      parentId: 0,
+    }).then((res) => {
+      this.setState(() => ({
+        list: res.data.list,
+        select: res.data.list[0].name,
+      }));
+      this.props.getDetail(res.data.list[0].id);
     });
   }
   render() {

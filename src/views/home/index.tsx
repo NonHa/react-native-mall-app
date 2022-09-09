@@ -11,7 +11,7 @@ import Hot from './info/hot';
 import Subject from './info/subject';
 import Love from './info/love';
 
-import { getHome } from '../../api/index';
+import { getHome, getBrand } from '../../api/home';
 import type { SwiperItem } from '../../components/Swiper/type';
 
 const styles = StyleSheet.create({
@@ -60,10 +60,17 @@ const slides: SwiperItem[] = [
 export default class Home extends React.Component {
   constructor(props: any) {
     super(props);
+    this.state = {
+      brandList: [],
+    };
   }
   componentDidMount() {
-    const data = getHome();
-    console.log('data', data);
+    getBrand({ page: 1, pageSize: 5 }).then((res) => {
+      console.log('res==>brand', res);
+      this.setState({
+        brandList: res.data.list,
+      });
+    });
   }
   render() {
     return (
@@ -77,7 +84,7 @@ export default class Home extends React.Component {
           header={{
             leftComponents: <Text style={{ fontSize: 18 }}>品牌制造商直供</Text>,
           }}>
-          <Product></Product>
+          <Product brandList={this.state.brandList}></Product>
         </Info>
         <Info
           header={{

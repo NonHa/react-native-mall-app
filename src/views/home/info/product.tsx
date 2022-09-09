@@ -1,31 +1,22 @@
 import React from 'react';
 import { Text, View, StyleSheet, ScrollView, Image, TouchableHighlight } from 'react-native';
 import TipBox from './tipBox';
-export default function Product() {
+import { getBrand } from '../../../api/home';
+export default function Product(props) {
+  console.log('brandList', props.brandList);
+
   return (
     <View style={styles.container}>
-      <View style={styles.box}>
-        <TipBox style={styles.tipBox}></TipBox>
-        <Text>WMF制造商</Text>
-        <Text>9.9元起</Text>
-        <Image
-          source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }}
-          style={{ height: 100, width: '100%' }}></Image>
-      </View>
-      <View style={styles.box}>
-        <Text>WMF制造商</Text>
-        <Text>9.9元起</Text>
-        <Image
-          source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }}
-          style={{ height: 100, width: '100%' }}></Image>
-      </View>
-      <View style={styles.box}>
-        <Text>WMF制造商</Text>
-        <Text>9.9元起</Text>
-        <Image
-          source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }}
-          style={{ height: 100, width: '100%' }}></Image>
-      </View>
+      {props.brandList.map((v) => {
+        return (
+          <View style={styles.box}>
+            <TipBox style={styles.tipBox}></TipBox>
+            <Text>{v.name}制造商</Text>
+            <Text>{v.productCount}元起</Text>
+            <Image source={{ uri: v.bigPic }} style={{ height: 100, width: '100%' }}></Image>
+          </View>
+        );
+      })}
     </View>
   );
 }
