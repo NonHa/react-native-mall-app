@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, StyleSheet, ScrollView } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, Image } from 'react-native';
 import Swiper from '../../components/Swiper';
 import Tabs from './tabs';
 import Tip from './tip';
@@ -11,7 +11,7 @@ import Hot from './info/hot';
 import Subject from './info/subject';
 import Love from './info/love';
 
-import { getHome, getBrand } from '../../api/home';
+import { getHome, getBrand, getAdvertise } from '../../api/home';
 import type { SwiperItem } from '../../components/Swiper/type';
 import { ProductProps } from './info/type';
 const styles = StyleSheet.create({
@@ -43,26 +43,14 @@ const styles = StyleSheet.create({
   },
 });
 
-const slides: SwiperItem[] = [
-  {
-    component: <Text style={styles.text}>Hello Swiper</Text>,
-    style: styles.slide1,
-  },
-  {
-    style: styles.slide1,
-    component: <Text style={styles.text}>Hello Swiper2</Text>,
-  },
-  {
-    style: styles.slide1,
-    component: <Text style={styles.text}>Hello Swiper3</Text>,
-  },
-];
 export default class Home extends React.Component<any, ProductProps> {
   constructor(props: any) {
     super(props);
     this.state = {
       brandList: [],
+      advertiseList: [],
     };
+    this.getAdvertiseList = this.getAdvertiseList.bind(this);
   }
   componentDidMount() {
     getBrand({ page: 1, pageSize: 5 }).then((res) => {
@@ -70,12 +58,27 @@ export default class Home extends React.Component<any, ProductProps> {
         brandList: res.data.list,
       });
     });
+    this.getAdvertiseList();
+  }
+  getAdvertiseList() {
+    getAdvertise({ page: 1, pageSize: 5 }).then((res) => {
+      this.setState({
+        advertiseList: res.data.list.map((v): SwiperItem => {
+          return {
+            component: (
+              <Image source={{ uri: v.pic }} style={{ width: '100%', height: 200 }}></Image>
+            ),
+            style: styles.slide1,
+          };
+        }),
+      });
+    });
   }
   render() {
     return (
       <ScrollView>
         <View style={styles.container}>
-          <Swiper swiperItem={slides}></Swiper>
+          <Swiper swiperItem={this.state.advertiseList}></Swiper>
         </View>
         <Tabs></Tabs>
         <Tip></Tip>
