@@ -9,7 +9,7 @@ export default function Info(props: InfoProps) {
     <View style={{ backgroundColor: '#fff', padding: 10, marginTop: 10 }}>
       <Header {...props.header}></Header>
       {props.children}
-      {props.showBottom ? <Bottom></Bottom> : null}
+      {props.showBottom ? <Bottom {...props.bottom}></Bottom> : null}
     </View>
   );
 }

@@ -9,6 +9,7 @@ export type InfoProps = {
   header: HeaderProps;
   children?: React.ReactNode;
   showBottom?: boolean;
+  bottom?: object;
 };
 
 export interface ProductProps {

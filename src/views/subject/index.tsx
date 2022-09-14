@@ -4,48 +4,45 @@ import TopDetail from './topDetail';
 import Subject from '../home/info/subject';
 import Info from '../home/info';
 import { windowHeight } from '../../utils/index';
+import { recommendSubject, recommendSubjectInfo } from '../../api/subject';
+
 export default class Home extends React.Component {
   constructor(props: any) {
     super(props);
+    this.state = {
+      recommendSubject: [],
+    };
+    this.categorySelect = this.categorySelect.bind(this);
   }
-
+  componentDidMount() {
+    this.categorySelect({ recommendStatus: 1 });
+  }
+  categorySelect(param) {
+    recommendSubjectInfo({ page: 1, pageSize: 15, categoryId: 2, ...param }).then((res) => {
+      this.setState({
+        recommendSubject: res.data.list,
+      });
+    });
+  }
   render() {
     return (
       <View>
-        <TopDetail></TopDetail>
+        <TopDetail categorySelect={this.categorySelect}></TopDetail>
         <ScrollView style={{ height: windowHeight - 200 }}>
-          <Info
-            header={{
-              leftComponents: <Text style={{ fontSize: 18 }}>餐厨专题</Text>,
-              rightComponents: null,
-            }}
-            showBottom>
-            <Subject></Subject>
-          </Info>
-          <Info
-            header={{
-              leftComponents: <Text style={{ fontSize: 18 }}>餐厨专题</Text>,
-              rightComponents: null,
-            }}
-            showBottom>
-            <Subject></Subject>
-          </Info>
-          <Info
-            header={{
-              leftComponents: <Text style={{ fontSize: 18 }}>餐厨专题</Text>,
-              rightComponents: null,
-            }}
-            showBottom>
-            <Subject></Subject>
-          </Info>
-          <Info
-            header={{
-              leftComponents: <Text style={{ fontSize: 18 }}>餐厨专题</Text>,
-              rightComponents: null,
-            }}
-            showBottom>
-            <Subject></Subject>
-          </Info>
+          {this.state.recommendSubject.map((v) => {
+            return (
+              <Info
+                key={v.id}
+                header={{
+                  leftComponents: <Text style={{ fontSize: 18 }}>{v.categoryName}</Text>,
+                  rightComponents: null,
+                }}
+                showBottom
+                bottom={v}>
+                <Subject {...v}></Subject>
+              </Info>
+            );
+          })}
         </ScrollView>
       </View>
     );

@@ -9,14 +9,14 @@ export default function Bottom(props: InfoProps) {
     <View style={styles.container}>
       <View style={styles.loveAndTap}>
         <Icon name="heart" size={30}></Icon>
-        <Text style={{ fontSize: 15 }}>100</Text>
+        <Text style={{ fontSize: 15 }}>{props.collectCount || 0}</Text>
         <Icon name="eye" size={30} style={{ marginLeft: 10 }}></Icon>
-        <Text style={{ fontSize: 15 }}>1000</Text>
+        <Text style={{ fontSize: 15 }}>{props.readCount || 0}</Text>
       </View>
       <View style={styles.chat}>
         <MaterialIcons name="message" size={20}></MaterialIcons>
 
-        <Text style={{ fontSize: 15 }}>100</Text>
+        <Text style={{ fontSize: 15 }}>{props.commentCount || 0}</Text>
       </View>
     </View>
   );
