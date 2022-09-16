@@ -1,8 +1,11 @@
 import React from 'react';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
+import { useRoute } from '@react-navigation/native';
 import { bottomNavs } from './navsConfig';
+import { useAppDispatch } from '../app/hooks';
+import { setUserInfo } from '../store/features/user/infoSlice';
+
 const Tab = createBottomTabNavigator();
 
 export default function BottomTabs() {

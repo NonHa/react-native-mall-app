@@ -1,10 +1,12 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Text, View, StyleSheet, TouchableHighlight } from 'react-native';
-
 import Icon from 'react-native-vector-icons/Ionicons';
-
+import { router } from '../../navigation/intercept';
 export default function Tabs() {
-  function _onPress() {}
+  function _onPress() {
+    router.push('Home', {});
+  }
   return (
     <View style={styles.container}>
       <TouchableHighlight

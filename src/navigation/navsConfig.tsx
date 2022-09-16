@@ -7,12 +7,26 @@ import type { ScreenProps, TabIconProps, BottomScreenProps } from '/#/navigation
 import BottomTabs from './BottomTabs';
 import Home from '../views/home';
 import User from '../views/user';
+import Login from '../views/login';
 import Category from '../views/category';
 import Subject from '../views/subject';
+import LoginInterceptor from './intercept/LoginInterceptor.ts';
 export const navsConfig: ScreenProps[] = [
   {
     name: 'Root',
     component: BottomTabs,
+  },
+  {
+    name: 'Login',
+    component: Login,
+    interceptors: [
+      {
+        clazz: LoginInterceptor,
+      },
+    ],
+    option: {
+      headerShown: false,
+    },
   },
 ];
 
@@ -29,6 +43,7 @@ export const bottomNavs: BottomScreenProps[] = [
   },
   {
     name: 'Category',
+    // component: Login,
     component: Category,
     option: {
       title: '分类',

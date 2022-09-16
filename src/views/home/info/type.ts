@@ -12,7 +12,8 @@ export type InfoProps = {
   bottom?: object;
 };
 
-export interface ProductProps {
+export interface ProductState {
   brandList: { name: string; id: number; productCount: number; bigPic: string }[];
   advertiseList: any[];
+  refreshing: boolean;
 }

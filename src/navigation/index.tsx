@@ -2,14 +2,17 @@ import React from 'react';
 
 import { Text, View } from 'react-native';
 
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import StackNavs from './stackNavs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Home from '../views/Home';
-const Stack = createNativeStackNavigator();
+// import { navigationRef } from './intercept';
 export default function Navigation() {
+  const navigationRef = useNavigationContainerRef();
+  // navigationRef.addListener('state', (e) => {
+  //   console.log('e', e);
+  // });
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <StackNavs></StackNavs>
     </NavigationContainer>
   );

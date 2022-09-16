@@ -14,6 +14,7 @@ export type RootStackParamList = {
   PostDetails: { id: string };
   Root: { id: string };
   NotFound: undefined;
+  Login: undefined;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> = StackScreenProps<
@@ -38,6 +39,7 @@ export type ScreenProps = {
     headerShown?: boolean;
     tabBarIcon?: (props: TabIconProps) => Element;
   };
+  interceptors?: any[];
 };
 export type BottomScreenProps = {
   name: string;
