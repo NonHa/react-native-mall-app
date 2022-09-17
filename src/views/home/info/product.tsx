@@ -6,16 +6,18 @@ import { ProductProps } from './type';
 export default function Product(props: ProductProps) {
   return (
     <View style={styles.container}>
-      {props.brandList.map((v) => {
-        return (
-          <View key={v.id} style={styles.box}>
-            <TipBox style={styles.tipBox}></TipBox>
-            <Text>{v.name}制造商</Text>
-            <Text>{v.productCount}元起</Text>
-            <Image source={{ uri: v.bigPic }} style={{ height: 100, width: '100%' }}></Image>
-          </View>
-        );
-      })}
+      {props.brandList
+        ? props.brandList.map((v) => {
+            return (
+              <View key={v.id} style={styles.box}>
+                <TipBox style={styles.tipBox}></TipBox>
+                <Text>{v.name}制造商</Text>
+                <Text>{v.productCount}元起</Text>
+                <Image source={{ uri: v.bigPic }} style={{ height: 100, width: '100%' }}></Image>
+              </View>
+            );
+          })
+        : null}
     </View>
   );
 }

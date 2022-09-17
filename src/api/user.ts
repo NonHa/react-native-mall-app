@@ -3,6 +3,7 @@ enum User {
   login = '/admin/login',
   advertiseList = '/home/advertise/list',
   UserInfo = '/admin/info',
+  addMemeber = '/sso/addMemeber',
 }
 
 export const userLogin = (data: { username: string; password: string }) => {
@@ -11,4 +12,8 @@ export const userLogin = (data: { username: string; password: string }) => {
 
 export const getUserInfo = () => {
   return Http.get(User.UserInfo);
+};
+
+export const addMemeber = (data) => {
+  return Http.post(User.addMemeber, data);
 };

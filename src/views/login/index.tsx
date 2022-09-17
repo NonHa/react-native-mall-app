@@ -33,6 +33,11 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     padding: 5,
   },
+  tip: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
 });
 export default function Login({ navigation }) {
   const dispatch = useAppDispatch();
@@ -72,6 +77,10 @@ export default function Login({ navigation }) {
     });
   };
 
+  const goRegister = () => {
+    console.log(222);
+    navigation.push('Register');
+  };
   return (
     <View style={styles.container}>
       <View style={styles.inputRow}>
@@ -99,6 +108,11 @@ export default function Login({ navigation }) {
 
       <View style={{ marginTop: 20 }}>
         <Button title="登录" onPress={() => login()}></Button>
+      </View>
+
+      <View style={styles.tip}>
+        <Text onPress={() => goRegister()}>注册</Text>
+        <Text>找回密码？</Text>
       </View>
     </View>
   );
