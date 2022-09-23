@@ -6,12 +6,17 @@ export const ResponseInterceptors = (response: AxiosResponse) => {
 };
 
 export const RequstInterceptors = async (config: AxiosRequestConfig) => {
-  const tokenObj = JSON.parse(await getToken());
-  // console.log('tokenObj', tokenObj);
+  const tokenObj = await getToken();
+  // console.log('config', config);
 
   if (tokenObj) {
-    Object.assign(config.headers, { Authorization: `${tokenObj.tokenHead} ${tokenObj.token}` });
+    Object.assign(config.headers, { Authorization: `Bearer ${tokenObj}` });
   }
+
+  // if (config.method === 'get') {
+  // console.log('method', config.params);
+  // }
+  // console.log('config==>', config);
 
   // if (!(await getToken())) {
   //   StackActions.replace('Home');

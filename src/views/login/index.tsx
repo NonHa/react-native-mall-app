@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
 });
 export default function Login({ navigation }) {
   const dispatch = useAppDispatch();
-  const [loginMes, changeMes] = useState({ username: 'admin', password: 'macro123' });
+  const [loginMes, changeMes] = useState({ username: '15184567852', password: '123' });
   useEffect(() => {
     const fn = async () => {
       const num = (await getToken()) as string;
@@ -57,20 +57,21 @@ export default function Login({ navigation }) {
 
   const login = () => {
     // return;
-    userLogin(loginMes).then((res) => {
+
+    userLogin({ ...loginMes, platform: 'app' }).then((res) => {
       console.log('user-login', res);
       ToastAndroid.showWithGravityAndOffset(
-        res.message,
+        res.message || '登录成功',
         ToastAndroid.LONG,
         ToastAndroid.TOP,
         25,
         50,
       );
-      if (res.code === 200) {
-        dispatch(setUserInfo(res.data));
-        dispatch(getInfo());
+      if (res.token) {
+        dispatch(setUserInfo(res.token));
+        // dispatch(getInfo());
         setTimeout(() => {
-          const resetAction = StackActions.replace('Root', res.data);
+          const resetAction = StackActions.replace('Root', res.token);
           navigation.dispatch(resetAction);
         }, 500);
       }
@@ -78,7 +79,6 @@ export default function Login({ navigation }) {
   };
 
   const goRegister = () => {
-    console.log(222);
     navigation.push('Register');
   };
   return (

@@ -8,8 +8,8 @@ const getTokens = createAsyncThunk('/info/getToken', async () => {
 });
 
 const getInfo = createAsyncThunk('/info/item', async () => {
-  console.log('await getUserInfo()', await getUserInfo());
-  const message = await getUserInfo();
+  const message = await getUserInfo({});
+  console.log('await getUserInfo()', message);
   return message.data || {};
 });
 const initialState = {
@@ -32,8 +32,6 @@ const infoSlice = createSlice({
       state.token = action.payload;
     });
     builder.addCase(getInfo.fulfilled, (state, action) => {
-      console.log('action.payload==>info', action.payload);
-
       state.info = action.payload;
     });
   },

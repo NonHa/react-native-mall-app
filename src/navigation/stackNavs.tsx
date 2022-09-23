@@ -7,41 +7,24 @@ import { RootStackParamList, NativeStackScreenItemProps } from '/#/navigation';
 import Login from '../views/login';
 import { getToken, removeToken } from '../utils/common';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { getTokens } from '../store/features/user/infoSlice';
 import { useNavigation } from '@react-navigation/native';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function StackNavs() {
-  // const navigation = useNavigation();
-  // const [token, setToken] = useState<string>('');
-  // useEffect(() => {
-  //   setTimeout(async () => {
-  //     const num = (await getToken()) as string;
-  //     setToken(num);
-  //     navigation.reset(num ? 'Root' : 'Home');
-  //   }, 500);
-  // }, []);
+  const navigation = useNavigation();
+  async function logout() {
+    await removeToken();
 
-  // const dispatch = useDispatch();
-  // // dispatch(getTokens());
-  // token = useSelector((state) => state.infoSlice).token;
-  // console.log('token1', token);
-
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Login' }],
+    });
+  }
   return (
     <Stack.Navigator
       initialRouteName={'Login'}
       screenOptions={{
-        title: 'Mall',
         headerTitleAlign: 'center',
-        headerLeft: () => (
-          <Icon name="bell" size={24} onPress={async () => await removeToken()}></Icon>
-        ),
-        headerRight: () => (
-          <View style={styles.headerLeft}>
-            <Icon style={styles.headerLeftIcon} name="search" size={24}></Icon>
-            <Icon style={styles.headerLeftIcon} name="shopping-cart" size={24}></Icon>
-          </View>
-        ),
       }}>
       {navsConfig.map(function (v, index) {
         return (
@@ -56,11 +39,11 @@ export default function StackNavs() {
   );
 }
 
-const styles = StyleSheet.create({
-  headerLeft: {
-    display: 'flex',
-    flexDirection: 'row',
-    width: 60,
-  },
-  headerLeftIcon: { flex: 1 },
-});
+// const styles = StyleSheet.create({
+//   headerLeft: {
+//     display: 'flex',
+//     flexDirection: 'row',
+//     width: 60,
+//   },
+//   headerLeftIcon: { flex: 1 },
+// });

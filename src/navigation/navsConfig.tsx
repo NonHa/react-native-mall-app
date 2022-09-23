@@ -13,11 +13,25 @@ import Register from '../views/login/register';
 
 import Category from '../views/category';
 import Subject from '../views/subject';
+import UseDetail from '../views/user/message/detail';
+import UseMessage from '../views/user/message/useMessage';
 import LoginInterceptor from './intercept/LoginInterceptor.ts';
+import { Text, View, StyleSheet } from 'react-native';
 export const navsConfig: ScreenProps[] = [
   {
     name: 'Root',
     component: BottomTabs,
+    option: ({ navigation, route }) => ({
+      title: 'Mall',
+
+      headerLeft: (props) => <Icon name="bell" size={24}></Icon>,
+      headerRight: () => (
+        <View style={styles.headerLeft}>
+          <Icon style={styles.headerLeftIcon} name="search" size={24}></Icon>
+          <Icon style={styles.headerLeftIcon} name="shopping-cart" size={24}></Icon>
+        </View>
+      ),
+    }),
   },
   {
     name: 'Login',
@@ -37,6 +51,20 @@ export const navsConfig: ScreenProps[] = [
     option: {
       headerShown: false,
     },
+  },
+  {
+    name: 'UseDetail',
+    component: UseDetail,
+    option: ({ navigation }) => ({
+      title: '个人中心',
+    }),
+  },
+  {
+    name: 'UseMessage',
+    component: UseMessage,
+    option: ({ navigation }) => ({
+      title: '个人信息',
+    }),
   },
 ];
 
@@ -83,3 +111,12 @@ export const bottomNavs: BottomScreenProps[] = [
     },
   },
 ];
+
+const styles = StyleSheet.create({
+  headerLeft: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: 60,
+  },
+  headerLeftIcon: { flex: 1 },
+});

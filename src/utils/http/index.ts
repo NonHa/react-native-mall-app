@@ -4,6 +4,7 @@ import { ResponseInterceptors, RequstInterceptors } from './interceptors';
 const instance = axios.create({
   baseURL: BASE_URL,
   timeout: 500000,
+  headers: { 'Content-Type': 'application/json;charset=UTF-8' },
 });
 
 // 添加请求拦截器
