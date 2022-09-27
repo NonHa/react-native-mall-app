@@ -1,26 +1,53 @@
 import React from 'react';
-import { Text, View, StyleSheet, Image, TextInput } from 'react-native';
+import { Text, View, StyleSheet, Image, TextInput, Button, ScrollView } from 'react-native';
 import { useAppSelector } from '../../../app/hooks';
 import { connect } from 'react-redux';
 import Jump from '../jump';
 import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
-class UseMessage extends React.Component {
-  constructor(props: any) {
+import { updateMemeber } from '../../../api/user';
+import { UserMessage } from './type';
+import { TimeDateFormat } from '../../../utils/timeFormat';
+class UseMessage extends React.Component<
+  { info: UserMessage },
+  { modifyForm: UserMessage; setDate: Date }
+> {
+  constructor(props: { info: UserMessage }) {
     super(props);
     this.state = {
       modifyForm: {
-        birthday: '',
-        job: '',
-        nickname: '',
-        city: '',
-        gender: '',
-        personalizedSignature: '',
+        ...props.info,
       },
       setDate: new Date(),
     };
+    // console.log('modifyForm', this.state.modifyForm);
+
+    this._submit = this._submit.bind(this);
+    this.pickTime = this.pickTime.bind(this);
+    this._setTime = this._setTime.bind(this);
   }
   componentDidMount() {}
-  _setTime() {}
+  pickTime() {
+    DateTimePickerAndroid.open({
+      value: this.state.setDate,
+      onChange: this._setTime,
+      mode: 'date',
+      is24Hour: true,
+    });
+  }
+  _setTime(event, date) {
+    this.setState((state) => {
+      return {
+        modifyForm: {
+          ...this.state.modifyForm,
+          birthday: TimeDateFormat(new Date(event.nativeEvent.timestamp)),
+        },
+      };
+    });
+  }
+  _submit() {
+    console.log('state', this.state.modifyForm);
+    updateMemeber(this.state.modifyForm).then((res) => {});
+  }
   render() {
     const jumpData = [
       {
@@ -33,9 +60,13 @@ class UseMessage extends React.Component {
         render: () => {
           return (
             <TextInput
-              defaultValue="admin"
               style={styles.input}
-              value={this.state.modifyForm.username}></TextInput>
+              value={this.state.modifyForm.nickname}
+              onChangeText={(nickname) => {
+                this.setState({
+                  modifyForm: { ...this.state.modifyForm, nickname },
+                });
+              }}></TextInput>
           );
         },
       },
@@ -45,15 +76,10 @@ class UseMessage extends React.Component {
       },
       {
         title: '生日',
-        jumpPressOnrender: true,
         render: () => {
-          DateTimePickerAndroid.open({
-            value: this.state.setDate,
-            onChange: this._setTime,
-            mode: 'date',
-            is24Hour: true,
-          });
+          return <Text>{this.state.modifyForm.birthday}</Text>;
         },
+        pressFun: this.pickTime,
       },
       {
         title: '城市',
@@ -64,9 +90,13 @@ class UseMessage extends React.Component {
         render: () => {
           return (
             <TextInput
-              defaultValue="admin"
               style={styles.input}
-              value={this.state.modifyForm.job}></TextInput>
+              value={this.state.modifyForm.job}
+              onChangeText={(job) => {
+                this.setState({
+                  modifyForm: { ...this.state.modifyForm, job },
+                });
+              }}></TextInput>
           );
         },
       },
@@ -76,16 +106,20 @@ class UseMessage extends React.Component {
         render: () => {
           return (
             <TextInput
-              defaultValue="admin"
               style={styles.input}
-              value={this.state.modifyForm.job}></TextInput>
+              value={this.state.modifyForm.personalizedSignature}
+              onChangeText={(personalizedSignature) => {
+                this.setState({
+                  modifyForm: { ...this.state.modifyForm, personalizedSignature },
+                });
+              }}></TextInput>
           );
         },
       },
     ];
 
     return (
-      <View>
+      <ScrollView>
         <View style={styles.container}>
           <Image
             source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }}
@@ -95,8 +129,11 @@ class UseMessage extends React.Component {
           {jumpData.map((v, index) => {
             return <Jump key={index} {...v} rightBoxStyle={{ width: 70 }}></Jump>;
           })}
+          <View style={{ marginTop: 20, padding: 20 }}>
+            <Button title="保存" onPress={() => this._submit()}></Button>
+          </View>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }

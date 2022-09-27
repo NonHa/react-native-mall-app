@@ -9,7 +9,7 @@ const getTokens = createAsyncThunk('/info/getToken', async () => {
 
 const getInfo = createAsyncThunk('/info/item', async () => {
   const message = await getUserInfo({});
-  console.log('await getUserInfo()', message);
+  // console.log('await getUserInfo()', message);
   return message.data || {};
 });
 const initialState = {

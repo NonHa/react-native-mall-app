@@ -1,10 +1,22 @@
 import React from 'react';
-import { Text, View, StyleSheet, TouchableHighlight } from 'react-native';
+import { Text, View, StyleSheet, TouchableHighlight, ViewStyle, TextStyle } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
 import { useAppSelector } from '../../app/hooks';
 import { useLinkTo } from '@react-navigation/native';
-export default function Jump(props) {
+import PropTypes from 'prop-types';
+type JumpProps = {
+  render?: () => React.ReactNode;
+  pressFun?: () => void;
+  goPath?: string;
+  jumpPressOnrender?: string;
+  rightIcon?: string;
+  hideArrow?: boolean;
+  title: string;
+  num?: number;
+  rightBoxStyle?: ViewStyle | TextStyle;
+};
+export default function Jump(props: JumpProps) {
   const info = useAppSelector((state) => state.infoSlice.info);
   const infoKey = props.infoKey;
   const detail = info.detail || {};
@@ -12,13 +24,13 @@ export default function Jump(props) {
   function _press() {
     if (props.goPath) {
       // console.log('goPath', props.goPath);
-
       linkTo(props.goPath);
     }
     if (props.jumpPressOnrender) {
-      console.log('render-click');
-
-      props.render();
+      props.render && props.render();
+    }
+    if (props.pressFun) {
+      props.pressFun();
     }
   }
   return (
