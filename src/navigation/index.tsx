@@ -8,9 +8,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 // import { navigationRef } from './intercept';
 export default function Navigation() {
   const navigationRef = useNavigationContainerRef();
-  // navigationRef.addListener('state', (e) => {
-  //   console.log('e', e);
-  // });
+  navigationRef.addListener('state', (e) => {
+    console.log('e', e);
+  });
   return (
     <NavigationContainer ref={navigationRef}>
       <StackNavs></StackNavs>

@@ -1,5 +1,14 @@
 import React from 'react';
-import { Text, View, StyleSheet, Image, TextInput, Button, ScrollView } from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  TextInput,
+  Button,
+  ScrollView,
+  ToastAndroid,
+} from 'react-native';
 import { useAppSelector } from '../../../app/hooks';
 import { connect } from 'react-redux';
 import Jump from '../jump';
@@ -45,8 +54,18 @@ class UseMessage extends React.Component<
     });
   }
   _submit() {
-    console.log('state', this.state.modifyForm);
-    updateMemeber(this.state.modifyForm).then((res) => {});
+    updateMemeber(this.state.modifyForm).then((res) => {
+      console.log('state', res);
+      if (res.code === 200) {
+        ToastAndroid.showWithGravityAndOffset(
+          '更新信息成功',
+          ToastAndroid.LONG,
+          ToastAndroid.TOP,
+          25,
+          50,
+        );
+      }
+    });
   }
   render() {
     const jumpData = [

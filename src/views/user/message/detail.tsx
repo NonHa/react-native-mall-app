@@ -11,6 +11,7 @@ class UseDetail extends React.Component {
   }
   componentDidMount() {}
   render() {
+    console.log('this.props==》', this.props.info);
     const jumpData = [
       {
         title: '个人信息',
