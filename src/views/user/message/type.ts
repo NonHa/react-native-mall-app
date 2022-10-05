@@ -7,4 +7,5 @@ export type UserMessage = {
   personalizedSignature: string;
   nickname: string;
   city: string;
+  categoryList: Array<{ name: string }>;
 };

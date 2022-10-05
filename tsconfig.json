@@ -13,8 +13,8 @@
     "target": "esnext",
     "baseUrl": ".",
     "paths": {
-      "/@/*": ["src/*"],
-      "/#/*": ["types/*"]
+      "@/*": ["src/*"],
+      "#/*": ["types/*"]
     }
   },
   "exclude": [

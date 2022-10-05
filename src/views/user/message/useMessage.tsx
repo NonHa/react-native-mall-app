@@ -9,13 +9,16 @@ import {
   ScrollView,
   ToastAndroid,
 } from 'react-native';
-import { useAppSelector } from '../../../app/hooks';
 import { connect } from 'react-redux';
 import Jump from '../jump';
+import { uploadFile } from '@/utils/http';
+import { useAppSelector } from '../../../app/hooks';
 import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { updateMemeber } from '../../../api/user';
 import { UserMessage } from './type';
 import { TimeDateFormat } from '../../../utils/timeFormat';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import type { CameraOptions } from 'react-native-image-picker';
 class UseMessage extends React.Component<
   { info: UserMessage },
   { modifyForm: UserMessage; setDate: Date }
@@ -66,6 +69,23 @@ class UseMessage extends React.Component<
         );
       }
     });
+  }
+  async chooseImage() {
+    const that = this;
+    const options: CameraOptions = {
+      mediaType: 'photo',
+    };
+    const result = await launchImageLibrary(options);
+    if (result && result.assets) {
+      const source = result.assets[0].uri.replace('file://', '');
+      const file = {
+        uri: source,
+        type: 'image/jpeg',
+        name: result.assets[0].fileName,
+      };
+
+      uploadFile(file);
+    }
   }
   render() {
     const jumpData = [
@@ -140,14 +160,42 @@ class UseMessage extends React.Component<
     return (
       <ScrollView>
         <View style={styles.container}>
-          <Image
-            source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }}
-            style={{ height: 80, width: 80, borderRadius: 40 }}></Image>
+          <Text onPress={() => this.chooseImage()}>
+            <Image
+              source={{
+                uri: 'file:///data/user/0/com.mall/cache/rn_image_picker_lib_temp_0adfbaba-f00e-4250-83df-74ef383114a7.jpg',
+              }}
+              style={{ height: 80, width: 80, borderRadius: 40 }}></Image>
+          </Text>
         </View>
         <View style={{ marginTop: 20 }}>
           {jumpData.map((v, index) => {
             return <Jump key={index} {...v} rightBoxStyle={{ width: 70 }}></Jump>;
           })}
+          <View
+            style={{
+              marginTop: 20,
+              padding: 10,
+              backgroundColor: '#ffff',
+            }}>
+            {this.props.info.categoryList.map((v, index) => {
+              return (
+                <Text
+                  key={index}
+                  style={{
+                    width: '33.33%',
+                    textAlign: 'center',
+                    borderWidth: 1,
+                    borderColor: '#ccc',
+                    height: 40,
+                    lineHeight: 40,
+                    borderRadius: 10,
+                  }}>
+                  {v.name}
+                </Text>
+              );
+            })}
+          </View>
           <View style={{ marginTop: 20, padding: 20 }}>
             <Button title="保存" onPress={() => this._submit()}></Button>
           </View>
