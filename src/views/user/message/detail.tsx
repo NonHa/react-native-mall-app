@@ -33,7 +33,7 @@ class UseDetail extends React.Component {
       <View>
         <View style={styles.container}>
           <Image
-            source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }}
+            source={{ uri: this.props.info.icon }}
             style={{ height: 80, width: 80, borderRadius: 40 }}></Image>
           <Text style={{ color: '#000', fontSize: 20, marginLeft: 20 }}>
             {this.props.info.username}

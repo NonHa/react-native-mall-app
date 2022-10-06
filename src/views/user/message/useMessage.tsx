@@ -8,17 +8,22 @@ import {
   Button,
   ScrollView,
   ToastAndroid,
+  TouchableHighlight,
 } from 'react-native';
 import { connect } from 'react-redux';
+import Picker from 'react-native-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import type { CameraOptions } from 'react-native-image-picker';
+import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
+
 import Jump from '../jump';
 import { uploadFile } from '@/utils/http';
 import { useAppSelector } from '../../../app/hooks';
-import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { updateMemeber } from '../../../api/user';
 import { UserMessage } from './type';
 import { TimeDateFormat } from '../../../utils/timeFormat';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import type { CameraOptions } from 'react-native-image-picker';
+import Radio from '@/components/radio';
+import { cityData } from '@/utils/city';
 class UseMessage extends React.Component<
   { info: UserMessage },
   { modifyForm: UserMessage; setDate: Date }
@@ -31,6 +36,25 @@ class UseMessage extends React.Component<
       },
       setDate: new Date(),
     };
+
+    Picker.init({
+      pickerData: cityData.map((v) => {
+        return {
+          [v.name]: v.city.map((k) => k.name),
+        };
+      }),
+      selectedValue: ['湖南'],
+      pickerConfirmBtnText: '确认',
+      pickerCancelBtnText: '取消',
+      pickerTitleText: '',
+
+      onPickerConfirm: (data) => {
+        console.log(data);
+        this.setState({
+          modifyForm: { ...this.state.modifyForm, city: data[1] },
+        });
+      },
+    });
     // console.log('modifyForm', this.state.modifyForm);
 
     this._submit = this._submit.bind(this);
@@ -71,20 +95,25 @@ class UseMessage extends React.Component<
     });
   }
   async chooseImage() {
-    const that = this;
     const options: CameraOptions = {
       mediaType: 'photo',
     };
     const result = await launchImageLibrary(options);
     if (result && result.assets) {
-      const source = result.assets[0].uri.replace('file://', '');
+      // const source = result.assets[0].uri.replace('file://', ''); // ios
       const file = {
-        uri: source,
+        uri: result.assets[0].uri,
         type: 'image/jpeg',
         name: result.assets[0].fileName,
       };
 
-      uploadFile(file);
+      const res = await uploadFile(file);
+      if (res.code === 200) {
+        this.setState({
+          modifyForm: { ...this.state.modifyForm, icon: res.data },
+        });
+      }
+      console.log('result', res);
     }
   }
   render() {
@@ -112,6 +141,23 @@ class UseMessage extends React.Component<
       {
         hideArrow: true,
         title: '性别',
+        render: () => {
+          const onChange = (value: string | number) => {
+            this.setState({
+              modifyForm: { ...this.state.modifyForm, gender: value },
+            });
+          };
+          return (
+            <View style={{ flexDirection: 'row' }}>
+              <Radio value={this.state.modifyForm.gender} label={1} onChange={onChange}>
+                男
+              </Radio>
+              <Radio value={this.state.modifyForm.gender} label={2} onChange={onChange}>
+                女
+              </Radio>
+            </View>
+          );
+        },
       },
       {
         title: '生日',
@@ -122,6 +168,14 @@ class UseMessage extends React.Component<
       },
       {
         title: '城市',
+        render: () => {
+          return <Text>{this.state.modifyForm.city}</Text>;
+        },
+        pressFun() {
+          console.log(111);
+
+          Picker.show();
+        },
       },
       {
         title: '职业',
@@ -160,13 +214,22 @@ class UseMessage extends React.Component<
     return (
       <ScrollView>
         <View style={styles.container}>
-          <Text onPress={() => this.chooseImage()}>
+          {/* <Text onPress={() => this.chooseImage()}> */}
+          <TouchableHighlight onPress={() => this.chooseImage()} underlayColor="none">
             <Image
               source={{
-                uri: 'file:///data/user/0/com.mall/cache/rn_image_picker_lib_temp_0adfbaba-f00e-4250-83df-74ef383114a7.jpg',
+                uri: this.state.modifyForm.icon ? this.state.modifyForm.icon : undefined,
               }}
-              style={{ height: 80, width: 80, borderRadius: 40 }}></Image>
-          </Text>
+              style={{
+                height: 80,
+                width: 80,
+                borderRadius: 40,
+                borderWidth: 1,
+                borderColor: '#ccc',
+              }}></Image>
+          </TouchableHighlight>
+
+          {/* </Text> */}
         </View>
         <View style={{ marginTop: 20 }}>
           {jumpData.map((v, index) => {

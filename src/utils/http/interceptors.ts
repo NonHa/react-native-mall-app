@@ -9,7 +9,7 @@ export const ResponseInterceptors = (response: AxiosResponse) => {
   const data = response.data;
   // console.log('response', data);
   if (data.code === 401) {
-    console.log('response.code', data.code);
+    // console.log('response.code', data.code);
 
     ToastAndroid.showWithGravityAndOffset(
       '认证信息已过期',
@@ -30,7 +30,7 @@ export const RequstInterceptors = async (config: AxiosRequestConfig) => {
     Object.assign(config.headers, { Authorization: `Bearer ${tokenObj}` });
   }
   config.url = `${BASE_URL}${config.url}`;
-  console.log('config', config);
+  // console.log('config', config);
 
   // if (config.method === 'get') {
   // console.log('method', config.params);

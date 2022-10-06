@@ -18,13 +18,14 @@ instance.interceptors.request.use(
   },
   function (error) {
     // 对请求错误做些什么
+
     return Promise.reject(error);
   },
 );
 
 instance.interceptors.response.use(
   function (response) {
-    console.log('response', response);
+    // console.log('response', response);
 
     return ResponseInterceptors(response);
     // return response;
@@ -37,36 +38,15 @@ instance.interceptors.response.use(
   },
 );
 
-export const uploadFile = async (data) => {
-  console.log('param', data);
-
+export const uploadFile = (data) => {
   const formData = new FormData();
 
   formData.append('file', data);
-  // const options = {};
 
-  // options.body = formData;
+  const headers = { 'Content-Type': 'multipart/form-data', accept: 'application/json' };
 
-  // options.headers = { 'Content-Type': 'multipart/form-data' };
-
-  // options.method = 'POST';
-
-  const headers = { 'Content-Type': 'multipart/json', accept: 'application/json' };
-
-  // await fetch(UPLOAD_FILE_URL, {
-  //   method: 'POST',
-  //   headers,
-  //   body: formData,
-  // });
-  instance.post(UPLOAD_FILE_URL, formData, {
+  return instance.post(UPLOAD_FILE_URL, formData, {
     headers,
   });
-  // return instance.request({
-  //   url: UPLOAD_FILE_URL,
-  //   method: 'POST',
-  //   data: formData,
-  //   timeout: 6 * 1000 * 1000,
-  //   headers: { 'Content-Type': ContentTypeEnum.JSON },
-  // });
 };
 export default instance;
