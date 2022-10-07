@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, StyleSheet, ScrollView, Image, TouchableHighlight } from 'react-native';
-
-export default function Hot() {
+import { HotProps } from './type';
+export default function Hot(props: HotProps) {
   return (
     <View>
       <View style={styles.box}>
@@ -9,12 +9,12 @@ export default function Hot() {
           source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }}
           style={{ height: 80, width: 100 }}></Image>
         <View style={styles.message}>
-          <Text>银色星芒刺绣网纱底裤</Text>
-          <Text>薄如蝉翼，丝滑如肌肤</Text>
+          <Text>{props.title || ''}</Text>
+          {/* <Text>薄如蝉翼，丝滑如肌肤</Text> */}
           <View style={styles.price}>
-            <Text>￥99</Text>
+            {props.collectCount ? props.collectCount : <Text>￥{props.price || 0}</Text>}
 
-            <Text style={styles.btn}>4色可选</Text>
+            {/* <Text style={styles.btn}>4色可选</Text> */}
           </View>
         </View>
       </View>

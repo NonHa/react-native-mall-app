@@ -9,7 +9,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 export default function Navigation() {
   const navigationRef = useNavigationContainerRef();
   navigationRef.addListener('state', (e) => {
-    console.log('e', e);
+    // console.log('e', e);
   });
   return (
     <NavigationContainer ref={navigationRef}>

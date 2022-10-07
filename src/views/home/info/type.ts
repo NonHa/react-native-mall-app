@@ -17,3 +17,10 @@ export interface ProductState {
   advertiseList: any[];
   refreshing: boolean;
 }
+
+export type HotProps = {
+  img: string;
+  title: string;
+  price?: number;
+  collectCount?: React.ReactNode;
+};

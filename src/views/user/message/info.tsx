@@ -11,7 +11,7 @@ export default function UserInfo() {
   return (
     <View style={styles.container}>
       <Image
-        source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }}
+        source={{ uri: info.icon }}
         style={{ height: 80, width: 80, borderRadius: 40 }}></Image>
       <View style={styles.name}>
         <Text

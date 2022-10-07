@@ -1,4 +1,5 @@
 import React from 'react';
+import { Text, View, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import type { StackNavigationOptions } from '@react-navigation/stack';
@@ -16,7 +17,7 @@ import Subject from '../views/subject';
 import UseDetail from '../views/user/message/detail';
 import UseMessage from '../views/user/message/useMessage';
 import LoginInterceptor from './intercept/LoginInterceptor.ts';
-import { Text, View, StyleSheet } from 'react-native';
+import CollectInfo from '@/views/user/operate/collect/collectInfo';
 export const navsConfig: ScreenProps[] = [
   {
     name: 'Root',
@@ -64,6 +65,13 @@ export const navsConfig: ScreenProps[] = [
     component: UseMessage,
     option: ({ navigation }) => ({
       title: '个人信息',
+    }),
+  },
+  {
+    name: 'CollectInfo',
+    component: CollectInfo,
+    option: ({ navigation }) => ({
+      title: '我的收藏',
     }),
   },
 ];

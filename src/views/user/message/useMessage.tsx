@@ -14,11 +14,10 @@ import { connect } from 'react-redux';
 import Picker from 'react-native-picker';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import type { CameraOptions } from 'react-native-image-picker';
-import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
+import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 
 import Jump from '../jump';
 import { uploadFile } from '@/utils/http';
-import { useAppSelector } from '../../../app/hooks';
 import { updateMemeber } from '../../../api/user';
 import { UserMessage } from './type';
 import { TimeDateFormat } from '../../../utils/timeFormat';
@@ -172,8 +171,6 @@ class UseMessage extends React.Component<
           return <Text>{this.state.modifyForm.city}</Text>;
         },
         pressFun() {
-          console.log(111);
-
           Picker.show();
         },
       },

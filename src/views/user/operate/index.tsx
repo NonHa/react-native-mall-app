@@ -1,18 +1,16 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import ClickTabs from './clickTabs';
-import Collect from './collect';
-export default class Oprate extends React.Component {
-  constructor(props: any) {
-    super(props);
-  }
+import Collect from './collect/collect';
+import { useLinkTo } from '@react-navigation/native';
 
-  render() {
-    return (
-      <View>
-        <ClickTabs></ClickTabs>
-        <Collect></Collect>
-      </View>
-    );
-  }
+export default function Oprate() {
+  const linkTo = useLinkTo();
+
+  return (
+    <View>
+      <ClickTabs></ClickTabs>
+      <Collect linkTo={linkTo}></Collect>
+    </View>
+  );
 }
