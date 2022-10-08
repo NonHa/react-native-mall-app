@@ -5,8 +5,13 @@ import Subject from '../home/info/subject';
 import Info from '../home/info';
 import { windowHeight } from '../../utils/index';
 import { recommendSubject, recommendSubjectInfo } from '../../api/subject';
-
-export default class Home extends React.Component {
+import { SubjectItem } from './type';
+export default class Home extends React.Component<
+  any,
+  {
+    recommendSubject: SubjectItem[];
+  }
+> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -19,6 +24,8 @@ export default class Home extends React.Component {
   }
   categorySelect(param) {
     recommendSubjectInfo({ page: 1, pageSize: 15, categoryId: 2, ...param }).then((res) => {
+      console.log('res.data', res.data);
+
       this.setState({
         recommendSubject: res.data.list,
       });

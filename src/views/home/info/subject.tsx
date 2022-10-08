@@ -1,8 +1,10 @@
 import React from 'react';
 import { Text, View, StyleSheet, ScrollView, Image, TouchableHighlight } from 'react-native';
-
-export default function Subject(props) {
+import { useLinkTo } from '@react-navigation/native';
+import { SubjectItem } from '@/views/subject/type';
+export default function Subject(props: SubjectItem) {
   console.log('props', props.pic);
+  const linkTo = useLinkTo();
 
   return (
     <View style={styles.box}>
@@ -13,7 +15,9 @@ export default function Subject(props) {
         style={{ height: 120, width: '100%' }}></Image>
       <View style={styles.message}>
         <View>
-          <Text>{props.subjectName}</Text>
+          <Text onPress={() => linkTo(`/SubjectDetail?id=${props.subjectId}`)}>
+            {props.subjectName}
+          </Text>
         </View>
         <View>
           <Text>￥99起</Text>

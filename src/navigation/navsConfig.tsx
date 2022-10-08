@@ -18,6 +18,7 @@ import UseDetail from '../views/user/message/detail';
 import UseMessage from '../views/user/message/useMessage';
 import LoginInterceptor from './intercept/LoginInterceptor.ts';
 import CollectInfo from '@/views/user/operate/collect/collectInfo';
+import SubjectDetail from '@/views/subject/detail';
 export const navsConfig: ScreenProps[] = [
   {
     name: 'Root',
@@ -74,6 +75,16 @@ export const navsConfig: ScreenProps[] = [
       title: '我的收藏',
     }),
   },
+  {
+    name: 'SubjectDetail',
+    component: SubjectDetail,
+    option: {
+      title: '专题详情',
+      tabBarIcon: (props: TabIconProps): React.ReactNode => (
+        <Icon name="coffee" color={props.color} size={props.size} />
+      ),
+    },
+  },
 ];
 
 export const bottomNavs: BottomScreenProps[] = [
@@ -98,6 +109,7 @@ export const bottomNavs: BottomScreenProps[] = [
       ),
     },
   },
+
   {
     name: 'Subject',
     component: Subject,
