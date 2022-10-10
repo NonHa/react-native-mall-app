@@ -19,6 +19,7 @@ import UseMessage from '../views/user/message/useMessage';
 import LoginInterceptor from './intercept/LoginInterceptor.ts';
 import CollectInfo from '@/views/user/operate/collect/collectInfo';
 import SubjectDetail from '@/views/subject/detail';
+import WriteComment from '@/components/comment/write';
 export const navsConfig: ScreenProps[] = [
   {
     name: 'Root',
@@ -83,6 +84,13 @@ export const navsConfig: ScreenProps[] = [
       tabBarIcon: (props: TabIconProps): React.ReactNode => (
         <Icon name="coffee" color={props.color} size={props.size} />
       ),
+    },
+  },
+  {
+    name: 'WriteComment',
+    component: WriteComment,
+    option: {
+      title: '填写评论',
     },
   },
 ];

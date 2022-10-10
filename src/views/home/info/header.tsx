@@ -31,7 +31,7 @@ export default class Header extends React.Component<HeaderProps> {
   };
   render(): React.ReactNode {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, this.props.style]}>
         <View style={styles.left}>{this.props.leftComponents}</View>
         <View style={styles.center}>{this.props.centerComponents}</View>
         <View style={styles.right}>{this.props.rightComponents}</View>

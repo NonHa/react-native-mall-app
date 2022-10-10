@@ -1,23 +1,41 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, Image, ScrollView, StyleSheet } from 'react-native';
-import { recommendSubjectDetail } from '@/api/subject';
+import { Text, View, Image, ScrollView, StyleSheet, TouchableHighlight } from 'react-native';
+import { useLinkTo, useNavigation } from '@react-navigation/native';
+
+import { recommendSubjectDetail, getSubjectCommnet } from '@/api/subject';
 import Swiper from '@/components/Swiper';
+import Hot from '@/views/home/info/hot';
+import Comment from '@/components/comment';
+import Info from '../home/info';
+import Icon from 'react-native-vector-icons/Ionicons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
 import type { SwiperItem } from '@/components/Swiper/type';
+import type { SubjectItemState } from './type';
+import type { SubjectComment } from '@/components/comment/type';
 export default function SubjectDetail(props) {
+  const linkTo = useLinkTo();
+  const navigetion = useNavigation();
+  console.log('props', props);
+
   const params = props.route.params;
+  const subjectId = params.id;
+
   // console.log('params', params)
-  const [subjectItem, changeSubjectItem] = useState<{
-    pic: string;
-    title: string;
-    categoryName: string;
-    createTime: string;
-    content: string;
-    productList: any[];
-  }>({ productList: [] });
+  const [subjectItem, changeSubjectItem] = useState<SubjectItemState>({
+    productList: [],
+    pic: '',
+    title: '',
+    categoryName: '',
+    content: '',
+    createTime: '',
+  });
   const [swiperItem, changeSwiperItem] = useState<SwiperItem[]>([]);
+  const [commentList, changeCommentList] = useState<SubjectComment[]>([]);
+
   useEffect(() => {
     recommendSubjectDetail({ id: params.id }).then((res) => {
-      console.log('res', res.data.productList);
       changeSubjectItem(res.data);
       changeSwiperItem([
         {
@@ -28,11 +46,29 @@ export default function SubjectDetail(props) {
         },
       ]);
     });
+
+    getComment();
   }, []);
 
+  function getComment() {
+    getSubjectCommnet({ id: params.id, page: 1, pageSize: 5 }).then((res) => {
+      changeCommentList(res.data);
+    });
+  }
+  function collectCount(item) {
+    return (
+      <View>
+        <View style={styles.loveAndTap}>
+          <Icon name="heart" size={25}></Icon>
+          <FontAwesome name="shopping-cart" size={22} style={{ marginLeft: 10 }}></FontAwesome>
+        </View>
+      </View>
+    );
+  }
+
   return (
-    <ScrollView>
-      <View style={{ height: 200 }}>
+    <ScrollView style={{ backgroundColor: '#ccc' }}>
+      <View style={{ height: 200, backgroundColor: '#fff' }}>
         <Swiper swiperItem={swiperItem}></Swiper>
       </View>
       <View style={styles.describe}>
@@ -50,15 +86,83 @@ export default function SubjectDetail(props) {
           <Text>{subjectItem.content}</Text>
         </View>
       </View>
-      <View>
-        <Text>相关单品</Text>
+      <View style={{ marginTop: 20, backgroundColor: '#fff' }}>
+        <Text style={{ paddingHorizontal: 30, paddingVertical: 20 }}>相关单品</Text>
         {subjectItem.productList.map((v, index) => {
           return (
-            <View key={index}>
-              <Text>{v.name}</Text>
-            </View>
+            <Hot
+              key={index}
+              title={v.name}
+              img={''}
+              price={v.price}
+              collectCount={collectCount(v)}></Hot>
           );
         })}
+        <View style={styles.icons}>
+          <View style={styles.iconsItem}>
+            <Icon name="heart" size={25}></Icon>
+            <Text style={{ fontSize: 15, marginLeft: 5 }}>
+              {subjectItem.collectSubjectCollectCount || 0}
+            </Text>
+          </View>
+          <View style={styles.iconsItem}>
+            <Icon name="eye" size={20} style={{ marginLeft: 10 }}></Icon>
+            <Text style={{ fontSize: 15, marginLeft: 5 }}>
+              {subjectItem.collectSubjectReadCount || 0}
+            </Text>
+          </View>
+          <View style={styles.iconsItem}>
+            <FontAwesome name="share-square" size={20} style={{ marginLeft: 10 }}></FontAwesome>
+
+            <Text style={{ fontSize: 15, marginLeft: 5 }}>
+              {subjectItem.collectSubjectCommentCount || 0}
+            </Text>
+          </View>
+          <View style={styles.iconsItem}>
+            <MaterialIcons name="message" size={20} style={{ marginLeft: 10 }}></MaterialIcons>
+            <Text style={{ fontSize: 15, marginLeft: 5 }}>
+              {subjectItem.collectSubjectCommentCount || 0}
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View style={{ backgroundColor: '#fff', marginTop: 20 }}>
+        <Info
+          header={{
+            leftComponents: <Text style={{ fontSize: 18 }}>精彩评论</Text>,
+            rightComponents: (
+              <TouchableHighlight
+                onPress={() =>
+                  navigetion.navigate(`WriteComment`, {
+                    refresh: () => {
+                      getComment();
+                    },
+                    id: subjectId,
+                  })
+                }
+                underlayColor="none">
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <FontAwesome
+                    name="pencil-square-o"
+                    size={20}
+                    style={{ marginLeft: 10 }}></FontAwesome>
+                  <Text style={{ marginLeft: 10 }}>写评论</Text>
+                </View>
+              </TouchableHighlight>
+            ),
+            style: styles.infoHeader,
+          }}
+          style={{}}>
+          {commentList.map((v) => {
+            return (
+              <View
+                key={v.id}
+                style={{ paddingHorizontal: 20, borderBottomWidth: 1, borderColor: '#ccc' }}>
+                <Comment {...v}></Comment>
+              </View>
+            );
+          })}
+        </Info>
       </View>
     </ScrollView>
   );
@@ -67,6 +171,7 @@ export default function SubjectDetail(props) {
 const styles = StyleSheet.create({
   describe: {
     padding: 20,
+    backgroundColor: '#fff',
   },
   contentHead: {
     flexDirection: 'row',
@@ -75,4 +180,34 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   product: {},
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderTopWidth: 1,
+    borderTopColor: '#ccc',
+    paddingTop: 5,
+  },
+  loveAndTap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  icons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+
+    paddingHorizontal: 60,
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#ccc',
+  },
+  iconsItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  infoHeader: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderColor: '#ccc',
+  },
 });
