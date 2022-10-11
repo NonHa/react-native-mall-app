@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, Image, ScrollView, StyleSheet, TouchableHighlight } from 'react-native';
+import {
+  Text,
+  View,
+  Image,
+  ScrollView,
+  StyleSheet,
+  TouchableHighlight,
+  FlatList,
+  SafeAreaView,
+} from 'react-native';
 import { useLinkTo, useNavigation } from '@react-navigation/native';
 
 import { recommendSubjectDetail, getSubjectCommnet } from '@/api/subject';
@@ -17,7 +26,7 @@ import type { SubjectComment } from '@/components/comment/type';
 export default function SubjectDetail(props) {
   const linkTo = useLinkTo();
   const navigetion = useNavigation();
-  console.log('props', props);
+  // console.log('props', props);
 
   const params = props.route.params;
   const subjectId = params.id;
@@ -33,26 +42,42 @@ export default function SubjectDetail(props) {
   });
   const [swiperItem, changeSwiperItem] = useState<SwiperItem[]>([]);
   const [commentList, changeCommentList] = useState<SubjectComment[]>([]);
+  const [canLoadMore, changeCanLoadMore] = useState<boolean>(false);
+  const [commentLoading, changeCommentLoading] = useState<boolean>(false);
 
+  const [query, changeQuery] = useState<{ page: number }>({
+    page: 1,
+  });
+  const pageSize = 2;
   useEffect(() => {
     recommendSubjectDetail({ id: params.id }).then((res) => {
       changeSubjectItem(res.data);
       changeSwiperItem([
         {
           component: (
-            <Image source={{ uri: subjectItem.pic }} style={{ width: '100%', height: 200 }}></Image>
+            <Image
+              source={{ uri: subjectItem.pic || 'https://reactnative.dev/img/tiny_logo.png' }}
+              style={{ width: '100%', height: 200 }}></Image>
           ),
           style: {},
         },
       ]);
     });
-
-    getComment();
   }, []);
+  useEffect(() => {
+    getComment();
+  }, [query]);
+  async function getComment() {
+    await getSubjectCommnet({ id: params.id, page: query.page, pageSize }).then((res) => {
+      if (commentList.length === res.data.total) {
+        changeCommentLoading(true);
 
-  function getComment() {
-    getSubjectCommnet({ id: params.id, page: 1, pageSize: 5 }).then((res) => {
-      changeCommentList(res.data);
+        return;
+      }
+
+      changeCommentLoading(false);
+
+      changeCommentList([...commentList, ...res.data.list]);
     });
   }
   function collectCount(item) {
@@ -67,104 +92,149 @@ export default function SubjectDetail(props) {
   }
 
   return (
-    <ScrollView style={{ backgroundColor: '#ccc' }}>
-      <View style={{ height: 200, backgroundColor: '#fff' }}>
-        <Swiper swiperItem={swiperItem}></Swiper>
-      </View>
-      <View style={styles.describe}>
-        <Text style={{ fontSize: 30 }}>{subjectItem.title}</Text>
-        <View style={styles.contentHead}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Image
-              source={{ uri: subjectItem.pic }}
-              style={{ width: 40, height: 40, borderRadius: 20 }}></Image>
-            <Text style={{ marginLeft: 10 }}>{subjectItem.categoryName}</Text>
-          </View>
-          <Text>{subjectItem.createTime}</Text>
-        </View>
-        <View>
-          <Text>{subjectItem.content}</Text>
-        </View>
-      </View>
-      <View style={{ marginTop: 20, backgroundColor: '#fff' }}>
-        <Text style={{ paddingHorizontal: 30, paddingVertical: 20 }}>相关单品</Text>
-        {subjectItem.productList.map((v, index) => {
-          return (
-            <Hot
-              key={index}
-              title={v.name}
-              img={''}
-              price={v.price}
-              collectCount={collectCount(v)}></Hot>
-          );
-        })}
-        <View style={styles.icons}>
-          <View style={styles.iconsItem}>
-            <Icon name="heart" size={25}></Icon>
-            <Text style={{ fontSize: 15, marginLeft: 5 }}>
-              {subjectItem.collectSubjectCollectCount || 0}
-            </Text>
-          </View>
-          <View style={styles.iconsItem}>
-            <Icon name="eye" size={20} style={{ marginLeft: 10 }}></Icon>
-            <Text style={{ fontSize: 15, marginLeft: 5 }}>
-              {subjectItem.collectSubjectReadCount || 0}
-            </Text>
-          </View>
-          <View style={styles.iconsItem}>
-            <FontAwesome name="share-square" size={20} style={{ marginLeft: 10 }}></FontAwesome>
+    <SafeAreaView>
+      <FlatList
+        style={{ backgroundColor: '#fff' }}
+        data={commentList}
+        onEndReached={(info) => {
+          setTimeout(() => {
+            if (canLoadMore && !commentLoading) {
+              changeQuery({
+                page: query.page + 1,
+              });
+            }
+          }, 100);
+        }}
+        onEndReachedThreshold={0.1}
+        keyExtractor={(item) => {
+          // console.log('item', item);
 
-            <Text style={{ fontSize: 15, marginLeft: 5 }}>
-              {subjectItem.collectSubjectCommentCount || 0}
-            </Text>
-          </View>
-          <View style={styles.iconsItem}>
-            <MaterialIcons name="message" size={20} style={{ marginLeft: 10 }}></MaterialIcons>
-            <Text style={{ fontSize: 15, marginLeft: 5 }}>
-              {subjectItem.collectSubjectCommentCount || 0}
-            </Text>
-          </View>
-        </View>
-      </View>
-      <View style={{ backgroundColor: '#fff', marginTop: 20 }}>
-        <Info
-          header={{
-            leftComponents: <Text style={{ fontSize: 18 }}>精彩评论</Text>,
-            rightComponents: (
-              <TouchableHighlight
-                onPress={() =>
-                  navigetion.navigate(`WriteComment`, {
-                    refresh: () => {
-                      getComment();
-                    },
-                    id: subjectId,
-                  })
-                }
-                underlayColor="none">
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <FontAwesome
-                    name="pencil-square-o"
-                    size={20}
-                    style={{ marginLeft: 10 }}></FontAwesome>
-                  <Text style={{ marginLeft: 10 }}>写评论</Text>
-                </View>
-              </TouchableHighlight>
-            ),
-            style: styles.infoHeader,
-          }}
-          style={{}}>
-          {commentList.map((v) => {
-            return (
-              <View
-                key={v.id}
-                style={{ paddingHorizontal: 20, borderBottomWidth: 1, borderColor: '#ccc' }}>
-                <Comment {...v}></Comment>
+          return item.id;
+        }}
+        renderItem={({ item: v }) => {
+          return (
+            <View
+              key={v.id}
+              style={{ paddingHorizontal: 20, borderBottomWidth: 1, borderColor: '#ccc' }}>
+              <Comment {...v}></Comment>
+            </View>
+          );
+        }}
+        ListHeaderComponent={() => {
+          return (
+            <View style={{ backgroundColor: '#ccc' }}>
+              <View style={{ height: 200, backgroundColor: '#fff' }}>
+                <Swiper swiperItem={swiperItem}></Swiper>
               </View>
-            );
-          })}
-        </Info>
-      </View>
-    </ScrollView>
+              <View style={styles.describe}>
+                <Text style={{ fontSize: 30 }}>{subjectItem.title}</Text>
+                <View style={styles.contentHead}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Image
+                      source={{
+                        uri: subjectItem.pic || 'https://reactnative.dev/img/tiny_logo.png',
+                      }}
+                      style={{ width: 40, height: 40, borderRadius: 20 }}></Image>
+                    <Text style={{ marginLeft: 10 }}>{subjectItem.categoryName}</Text>
+                  </View>
+                  <Text>{subjectItem.createTime}</Text>
+                </View>
+                <View>
+                  <Text>{subjectItem.content}</Text>
+                </View>
+              </View>
+              <View style={{ marginTop: 20, backgroundColor: '#fff' }}>
+                <Text style={{ paddingHorizontal: 30, paddingVertical: 20 }}>相关单品</Text>
+                {subjectItem.productList.map((v, index) => {
+                  return (
+                    <Hot
+                      key={index}
+                      title={v.name}
+                      img={''}
+                      price={v.price}
+                      collectCount={collectCount(v)}></Hot>
+                  );
+                })}
+                <View style={styles.icons}>
+                  <View style={styles.iconsItem}>
+                    <Icon name="heart" size={25}></Icon>
+                    <Text style={{ fontSize: 15, marginLeft: 5 }}>
+                      {subjectItem.collectSubjectCollectCount || 0}
+                    </Text>
+                  </View>
+                  <View style={styles.iconsItem}>
+                    <Icon name="eye" size={20} style={{ marginLeft: 10 }}></Icon>
+                    <Text style={{ fontSize: 15, marginLeft: 5 }}>
+                      {subjectItem.collectSubjectReadCount || 0}
+                    </Text>
+                  </View>
+                  <View style={styles.iconsItem}>
+                    <FontAwesome
+                      name="share-square"
+                      size={20}
+                      style={{ marginLeft: 10 }}></FontAwesome>
+
+                    <Text style={{ fontSize: 15, marginLeft: 5 }}>
+                      {subjectItem.collectSubjectCommentCount || 0}
+                    </Text>
+                  </View>
+                  <View style={styles.iconsItem}>
+                    <MaterialIcons
+                      name="message"
+                      size={20}
+                      style={{ marginLeft: 10 }}></MaterialIcons>
+                    <Text style={{ fontSize: 15, marginLeft: 5 }}>
+                      {subjectItem.collectSubjectCommentCount || 0}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+              <View style={{ backgroundColor: '#fff', marginTop: 20 }}>
+                <Info
+                  header={{
+                    leftComponents: <Text style={{ fontSize: 18 }}>精彩评论</Text>,
+                    rightComponents: (
+                      <TouchableHighlight
+                        onPress={() =>
+                          navigetion.navigate(`WriteComment`, {
+                            refresh: () => {
+                              changeCommentList([]);
+                              changeQuery({
+                                page: 1,
+                              });
+                            },
+                            id: subjectId,
+                          })
+                        }
+                        underlayColor="none">
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                          <FontAwesome
+                            name="pencil-square-o"
+                            size={20}
+                            style={{ marginLeft: 10 }}></FontAwesome>
+                          <Text style={{ marginLeft: 10 }}>写评论</Text>
+                        </View>
+                      </TouchableHighlight>
+                    ),
+                    style: styles.infoHeader,
+                  }}
+                  style={{}}></Info>
+              </View>
+            </View>
+          );
+        }}
+        ListFooterComponent={() => {
+          return commentLoading ? (
+            <View style={{ padding: 20 }}>
+              <Text style={{ textAlign: 'center' }}>没有更多评论了...</Text>
+            </View>
+          ) : null;
+        }}
+        onMomentumScrollBegin={() => {
+          changeCanLoadMore(true);
+        }}
+      />
+    </SafeAreaView>
   );
 }
 

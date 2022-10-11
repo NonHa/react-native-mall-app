@@ -25,6 +25,8 @@ export interface ProductState {
 export type HotProps = {
   img: string;
   title: string;
+  id: number;
   price?: number;
   collectCount?: React.ReactNode;
+  linkTo?: (props: HotProps) => void;
 };

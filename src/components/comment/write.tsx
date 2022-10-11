@@ -30,8 +30,9 @@ export default function WriteComment(props) {
           25,
           50,
         );
-        refresh();
+
         props.navigation.goBack();
+        refresh();
       } else {
         ToastAndroid.showWithGravityAndOffset(
           '评论失败',

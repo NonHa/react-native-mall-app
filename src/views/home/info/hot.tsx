@@ -9,7 +9,7 @@ export default function Hot(props: HotProps) {
           source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }}
           style={{ height: 80, width: 100 }}></Image>
         <View style={styles.message}>
-          <Text>{props.title || ''}</Text>
+          <Text onPress={() => props.linkTo && props.linkTo(props)}>{props.title || ''}</Text>
           {/* <Text>薄如蝉翼，丝滑如肌肤</Text> */}
           <View style={styles.price}>
             {props.collectCount ? props.collectCount : <Text>￥{props.price || 0}</Text>}

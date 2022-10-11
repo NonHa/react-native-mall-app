@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from 'react';
 
 import { useAppSelector } from '@/app/hooks';
-import { Text, View, ScrollView, RefreshControl, StyleSheet } from 'react-native';
+import {
+  Text,
+  View,
+  ScrollView,
+  RefreshControl,
+  StyleSheet,
+  FlatList,
+  SafeAreaView,
+} from 'react-native';
+import { useLinkTo } from '@react-navigation/native';
 import Hot from '@/views/home/info/hot';
 import { getCollectList } from '@/api/collect';
 import { HotProps } from '@/views/home/info/type';
@@ -9,6 +18,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 export default function CollectMessage(props) {
+  const linkTo = useLinkTo();
   const info = useAppSelector((state) => state.infoSlice.info);
   const params = props.route.params;
   const collectType = params.collectType;
@@ -31,6 +41,7 @@ export default function CollectMessage(props) {
         res.data.map((v): HotProps => {
           return {
             img: v.img,
+            id: v.collectSubjectId,
             title: collectType === 1 ? v.collectProductName : v.collectSubjectTitle,
             price: v.collectProductPromotionPrice,
           };
@@ -52,16 +63,25 @@ export default function CollectMessage(props) {
       </View>
     );
   };
+  function _linkTo(props: HotProps) {
+    linkTo(`/SubjectDetail?id=${props.id}`);
+  }
   return (
-    <ScrollView
-      refreshControl={<RefreshControl refreshing={refresh} onRefresh={getList}></RefreshControl>}
-      style={{ backgroundColor: '#fff' }}>
-      {collectList.map((v, index) => {
-        return (
-          <Hot key={index} {...v} collectCount={collectType === 1 ? null : collectCount(v)}></Hot>
-        );
-      })}
-    </ScrollView>
+    <SafeAreaView>
+      <FlatList
+        data={collectList}
+        renderItem={({ item: v }) => {
+          return (
+            <Hot
+              key={v.id}
+              {...v}
+              collectCount={collectType === 1 ? null : collectCount(v)}
+              linkTo={_linkTo}></Hot>
+          );
+        }}
+        refreshing={refresh}
+        onRefresh={() => getList()}></FlatList>
+    </SafeAreaView>
   );
 }
 

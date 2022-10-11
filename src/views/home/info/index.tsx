@@ -5,7 +5,7 @@ import Header from './header';
 import { InfoProps } from './type';
 import Bottom from './bottom';
 export default function Info(props: InfoProps) {
-  console.log('props', props.header);
+  // console.log('props', props.header);
 
   return (
     <View

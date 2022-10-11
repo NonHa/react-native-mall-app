@@ -8,7 +8,7 @@ export default function Comment(props: SubjectComment) {
     <View style={{ paddingVertical: 10 }}>
       <View style={styles.head}>
         <Image
-          source={{ uri: props.memberIcon || '' }}
+          source={{ uri: props.memberIcon || 'https://reactnative.dev/img/tiny_logo.png' }}
           style={{
             width: 40,
             height: 40,

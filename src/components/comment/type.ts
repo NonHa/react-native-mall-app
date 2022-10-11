@@ -1,5 +1,5 @@
 export type SubjectComment = {
-  id: number;
+  id: string;
   memberIcon: string;
   memberNickName: string;
   showStatus: string;
