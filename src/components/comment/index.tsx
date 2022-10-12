@@ -21,7 +21,12 @@ export default function Comment(props: SubjectComment) {
           <Text>{props.memberCity}</Text>
         </View>
       </View>
-      <Text style={{ paddingVertical: 10 }}>{props.content}</Text>
+      {props.contentRender ? (
+        props.contentRender()
+      ) : (
+        <Text style={{ paddingVertical: 10 }}>{props.content}</Text>
+      )}
+
       <View style={styles.bottom}>
         <Text>{props.createTime}</Text>
         <View style={{ flexDirection: 'row' }}>

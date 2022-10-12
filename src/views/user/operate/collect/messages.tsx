@@ -41,7 +41,7 @@ export default function CollectMessage(props) {
         res.data.map((v): HotProps => {
           return {
             img: v.img,
-            id: v.collectSubjectId,
+            id: collectType === 1 ? v.collectProductId : v.collectSubjectId,
             title: collectType === 1 ? v.collectProductName : v.collectSubjectTitle,
             price: v.collectProductPromotionPrice,
           };
@@ -64,7 +64,11 @@ export default function CollectMessage(props) {
     );
   };
   function _linkTo(props: HotProps) {
-    linkTo(`/SubjectDetail?id=${props.id}`);
+    if (collectType === 1) {
+      linkTo(`/ProductInfo?id=${props.id}`);
+    } else if (collectType === 2) {
+      linkTo(`/SubjectDetail?id=${props.id}`);
+    }
   }
   return (
     <SafeAreaView>

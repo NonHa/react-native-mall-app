@@ -20,6 +20,7 @@ import LoginInterceptor from './intercept/LoginInterceptor.ts';
 import CollectInfo from '@/views/user/operate/collect/collectInfo';
 import SubjectDetail from '@/views/subject/detail';
 import WriteComment from '@/components/comment/write';
+import ProductInfo from '@/views/product/info';
 export const navsConfig: ScreenProps[] = [
   {
     name: 'Root',
@@ -91,6 +92,13 @@ export const navsConfig: ScreenProps[] = [
     component: WriteComment,
     option: {
       title: '填写评论',
+    },
+  },
+  {
+    name: 'ProductInfo',
+    component: ProductInfo,
+    option: {
+      title: '商品信息',
     },
   },
 ];

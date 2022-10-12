@@ -2,7 +2,7 @@ import React from 'react';
 import type { StyleProp, ViewProps, ViewStyle } from 'react-native';
 
 export type HeaderProps = {
-  leftComponents: any;
+  leftComponents?: any;
   rightComponents?: any;
   centerComponents?: any;
   style?: StyleProp<ViewStyle>;

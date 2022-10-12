@@ -1,3 +1,5 @@
+import React from 'react';
+
 export type SubjectComment = {
   id: string;
   memberIcon: string;
@@ -6,4 +8,5 @@ export type SubjectComment = {
   createTime: string;
   content: string;
   memberCity: string;
+  contentRender?: () => React.ReactNode;
 };
