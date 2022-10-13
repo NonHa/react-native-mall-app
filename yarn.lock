@@ -6513,6 +6513,11 @@
   "resolved" "https://registry.npmmirror.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.3.1.tgz"
   "version" "1.3.1"
 
+"react-native-linear-gradient@^2.6.2":
+  "integrity" "sha512-Z8Xxvupsex+9BBFoSYS87bilNPWcRfRsGC0cpJk72Nxb5p2nEkGSBv73xZbEHnW2mUFvP+huYxrVvjZkr/gRjQ=="
+  "resolved" "https://registry.npmmirror.com/react-native-linear-gradient/-/react-native-linear-gradient-2.6.2.tgz"
+  "version" "2.6.2"
+
 "react-native-pager-view@*", "react-native-pager-view@^6.0.1", "react-native-pager-view@>= 4.0.0":
   "integrity" "sha512-kOVNu+4JnR3Gpykviy4WbOAnQz8TgP6O2pRvne221oPUDQLYrvEE/FINR0P85TxbMgvKTPlLejGw0ZHQbezK/g=="
   "resolved" "https://registry.npmmirror.com/react-native-pager-view/-/react-native-pager-view-6.0.1.tgz"

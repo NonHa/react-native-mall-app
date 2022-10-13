@@ -5,17 +5,7 @@ import { connect } from 'react-redux';
 import { useAppSelector } from '../../app/hooks';
 import { useLinkTo } from '@react-navigation/native';
 import PropTypes from 'prop-types';
-type JumpProps = {
-  render?: () => React.ReactNode;
-  pressFun?: () => void;
-  goPath?: string;
-  jumpPressOnrender?: string;
-  rightIcon?: string;
-  hideArrow?: boolean;
-  title: string;
-  num?: number;
-  rightBoxStyle?: ViewStyle | TextStyle;
-};
+import { JumpProps } from './type';
 export default function Jump(props: JumpProps) {
   const info = useAppSelector((state) => state.infoSlice.info);
   const infoKey = props.infoKey;

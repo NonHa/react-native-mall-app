@@ -1,5 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, ScrollView, Image, SafeAreaView } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  ScrollView,
+  Image,
+  SafeAreaView,
+  Modal,
+  TouchableHighlight,
+} from 'react-native';
 import Swiper from '@/components/Swiper';
 
 import { getInfoById } from '@/api/product';
@@ -7,52 +16,145 @@ import Jump from '@/views/user/jump';
 import Info from '@/views/home/info';
 import New from '@/views/home/info/new';
 import ShoppingBottomBtn from '@/components/shopping/bottomBtn';
+import { JumpProps } from '@/views/user/type';
+import { ServiceType } from '@/enums/base';
+import Icon from 'react-native-vector-icons/Ionicons';
+import CoverLayer from '@/components/coverLayer';
+import BuyModel from '@/components/shopping/buyModel';
+
+import type { BuyModelProps } from '@/components/shopping/type';
 export default function Introduce(props) {
   const params = props.route.params;
-  const [productInfo, changeProductInfo] = useState<{
-    name: string;
-    subTitle: string;
-    price: number;
-    serviceIds: number[];
-    description: string;
-    comment: { name?: string };
-    commentCount: number;
-    recommendList: { name: string; subTitle?: string; price?: number; id: number }[];
-    brandInfo: { id?: number; productCount: number; logo: string };
-    brandName: string;
-  }>({
+  const cover = useRef();
+  const [productInfo, changeProductInfo] = useState<
+    {
+      name: string;
+      subTitle: string;
+      price: number;
+      serviceIds: string;
+      description: string;
+      comment: { name?: string };
+      commentCount: number;
+      recommendList: { name: string; subTitle?: string; price?: number; id: number }[];
+      brandInfo: { id?: number; productCount: number; logo: string };
+      brandName: string;
+    } & BuyModelProps
+  >({
     name: '',
     subTitle: '',
     price: 0,
-    serviceIds: [],
+    serviceIds: '',
     description: '',
     comment: {},
     commentCount: 0,
     recommendList: [],
     brandInfo: { productCount: 0, logo: '' },
     brandName: '',
+    attributeList: [],
   });
+  const [modalVisible, changeModalVisible] = useState<boolean>(false);
   useEffect(() => {
     getInfoById({ id: params.id }).then((res) => {
-      // console.log('res', res);
+      console.log('res', res.data.attributeList);
       changeProductInfo(res.data);
     });
   }, []);
   const swiperItem = [];
-  const jump1 = [
+  const jump1: JumpProps[] = [
     {
       title: '服务说明',
+      render: () => {
+        const serviceIds: number[] =
+          (productInfo.serviceIds && productInfo.serviceIds.split(',')) || [];
+        return (
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 20 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 10 }}>
+              <Icon
+                name={
+                  serviceIds.includes(ServiceType.safe_return)
+                    ? 'checkmark-circle'
+                    : 'close-circle-sharp'
+                }
+                size={10}></Icon>
+              <Text>无忧退货</Text>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 10 }}>
+              <Icon
+                name={
+                  serviceIds.includes(ServiceType.quick_refund)
+                    ? 'checkmark-circle'
+                    : 'close-circle-sharp'
+                }
+                size={10}></Icon>
+              <Text>快速退款</Text>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 10 }}>
+              <Icon
+                name={
+                  serviceIds.includes(ServiceType.free_package_mail)
+                    ? 'checkmark-circle'
+                    : 'close-circle-sharp'
+                }
+                size={10}></Icon>
+              <Text>免费包邮</Text>
+            </View>
+          </View>
+        );
+      },
     },
     {
       title: '商品参数',
+      num: '查看',
+      pressFun: () => {
+        changeModalVisible(true);
+      },
     },
     {
       title: '选择规格',
     },
   ];
+  function pressCar() {
+    changeModalVisible(true);
+  }
+  function renderContent() {
+    return (
+      <View
+        style={{
+          backgroundColor: '#fff',
+          height: 400,
+          borderTopEndRadius: 20,
+          borderTopLeftRadius: 20,
+          padding: 20,
+        }}>
+        <Text onPress={() => changeModalVisible(false)}>354</Text>
+      </View>
+    );
+  }
+  function close() {
+    console.log('close');
+
+    changeModalVisible(false);
+  }
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={{ flex: 1 }}>
+        <Modal
+          visible={modalVisible}
+          transparent={true}
+          animationType={'slide'}
+          onRequestClose={() => {
+            changeModalVisible(!modalVisible);
+          }}>
+          <TouchableHighlight
+            style={{
+              height: '100%',
+              backgroundColor: 'rgba(0,0,0,0.4)',
+              justifyContent: 'flex-end',
+            }}
+            underlayColor="none">
+            <BuyModel attributeList={productInfo.attributeList}></BuyModel>
+          </TouchableHighlight>
+        </Modal>
         <View>
           <View style={{ height: 300, backgroundColor: '#fff' }}>
             <Swiper swiperItem={swiperItem}></Swiper>
@@ -132,7 +234,8 @@ export default function Introduce(props) {
           </Info>
         </View>
       </ScrollView>
-      <ShoppingBottomBtn></ShoppingBottomBtn>
+      <ShoppingBottomBtn JoinCar={pressCar}></ShoppingBottomBtn>
+      {/* <CoverLayer show={modalVisible} renderContent={renderContent}></CoverLayer> */}
     </SafeAreaView>
   );
 }
