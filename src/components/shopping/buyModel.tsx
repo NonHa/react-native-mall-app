@@ -11,11 +11,22 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import type { BuyModelProps } from './type';
 import LinearGradinet from 'react-native-linear-gradient';
+import { isArray } from '@/utils/is';
+import { addProductToCar } from '@/api/product';
 export default function BuyModel(props: BuyModelProps) {
-  console.log('props', props);
   const [selectObj, changeSelectObj] = useState({});
+  const [buyNum, changeBuyNum] = useState(0);
+  const [total, changeTotal] = useState(0);
+  const [price, changePrice] = useState(props.price);
+  const [skuId, changeSkuId] = useState(0);
 
   useEffect(() => {
+    props.skuList.forEach((v) => {
+      v.spData = isArray(v.spData) ? v.spData : JSON.parse(v.spData);
+      v.selectType = v.spData.map((v) => v.value).join('-');
+      console.log('props', v);
+    });
+
     props.attributeList.forEach((v, index) => {
       v.inputList.split(',').length > 0 &&
         v.inputList.split(',').forEach((k) => {
@@ -26,12 +37,42 @@ export default function BuyModel(props: BuyModelProps) {
         });
     });
   }, []);
-
+  useEffect(() => {
+    changeTotal(buyNum * price);
+  }, [buyNum]);
   function selectFun(index: number, str: string) {
     changeSelectObj({
       ...selectObj,
       [index]: str,
     });
+  }
+  useEffect(() => {
+    const str = Object.values(selectObj).join('-');
+    changePrice(props.price);
+
+    props.skuList.forEach((v) => {
+      if (v.selectType === str) {
+        changeSkuId(v.id);
+        changePrice(v.price);
+      }
+    });
+  }, [selectObj]);
+  function changeNum(type) {
+    if (type === 'des') {
+      if (buyNum === 0) return;
+      changeBuyNum(buyNum - 1);
+    } else {
+      changeBuyNum(buyNum + 1);
+    }
+  }
+  function submit() {
+    addProductToCar({
+      price: price,
+      quantity: buyNum,
+      productId: props.productId,
+      productName: props.productName,
+      productSkuId: skuId,
+    }).then((res) => {});
   }
   return (
     <TouchableHighlight
@@ -47,7 +88,7 @@ export default function BuyModel(props: BuyModelProps) {
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
               <Text style={{ color: '#ed4a06' }}>￥</Text>
-              <Text style={{ color: '#ed4a06', fontSize: 30 }}>198</Text>
+              <Text style={{ color: '#ed4a06', fontSize: 30 }}>{price}</Text>
             </View>
             <View
               style={{
@@ -72,7 +113,7 @@ export default function BuyModel(props: BuyModelProps) {
                   lineHeight: 30,
                   fontSize: 26,
                 }}>
-                1198
+                {price}
               </Text>
             </View>
           </View>
@@ -111,12 +152,25 @@ export default function BuyModel(props: BuyModelProps) {
             <View style={styles.count}>
               <Text style={{ fontSize: 18 }}>数量</Text>
               <View style={styles.inputNumBox}>
-                <Text style={[styles.inputIcon, { borderRightWidth: 1 }]}> - </Text>
+                <Text
+                  style={[styles.inputIcon, { borderRightWidth: 1 }]}
+                  onPress={() => changeNum('des')}>
+                  {' '}
+                  -{' '}
+                </Text>
                 <Text
                   style={{
                     width: 50,
-                  }}></Text>
-                <Text style={[styles.inputIcon, { borderLeftWidth: 1 }]}> + </Text>
+                    textAlign: 'center',
+                  }}>
+                  {buyNum}
+                </Text>
+                <Text
+                  style={[styles.inputIcon, { borderLeftWidth: 1 }]}
+                  onPress={() => changeNum('add')}>
+                  {' '}
+                  +{' '}
+                </Text>
               </View>
             </View>
           </View>
@@ -124,7 +178,7 @@ export default function BuyModel(props: BuyModelProps) {
         <View style={{ borderTopWidth: 2, borderTopColor: '#e1e1e1' }}>
           <View style={styles.totalMoney}>
             <View style={styles.subTotal}>
-              <Text style={{ fontSize: 20, color: '#050505' }}>小计￥324，</Text>
+              <Text style={{ fontSize: 20, color: '#050505' }}>小计￥{total}，</Text>
               <Text style={{ fontSize: 20, color: '#e26f32', marginLeft: 0 }}>共减</Text>
             </View>
             <View>
@@ -137,7 +191,9 @@ export default function BuyModel(props: BuyModelProps) {
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
               style={styles.linearGradient}>
-              <Text style={{ textAlign: 'center', color: '#fff', lineHeight: 55, fontSize: 17 }}>
+              <Text
+                style={{ textAlign: 'center', color: '#fff', lineHeight: 55, fontSize: 17 }}
+                onPress={() => submit()}>
                 立即支付
               </Text>
             </LinearGradinet>

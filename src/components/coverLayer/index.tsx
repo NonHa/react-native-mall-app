@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, forwardRef, useImperativeHandle } from 'react';
 import {
   Text,
   View,
@@ -7,42 +7,47 @@ import {
   Dimensions,
   Button,
   TouchableOpacity,
+  TouchableHighlight,
+  Modal,
 } from 'react-native';
-import type { CoverLayerProps } from './type';
+import type { CoverLayerProps, ModeRef } from './type';
 const c_deviceHeight = Dimensions.get('window').height;
-export default function CoverLayer(props: CoverLayerProps) {
-  const [fadeAnim, changeFadeAnim] = useState(0);
-  const top = useRef(new Animated.Value(c_deviceHeight)).current;
-  console.log('c_deviceHeight', top);
 
-  const c_duration = 1000;
-  function showFormBottom() {
-    return Animated.timing(top, {
-      toValue: 0,
-      duration: c_duration,
-      useNativeDriver: false,
-    }).start();
+export default forwardRef<ModeRef, CoverLayerProps>(function CoverLayer(
+  props: CoverLayerProps,
+  ref,
+) {
+  const [modalVisible, changeModalVisible] = useState<boolean>(false);
+
+  function show() {
+    changeModalVisible(true);
   }
-  showFormBottom();
+  function hideModel() {
+    changeModalVisible(false);
+  }
+  useImperativeHandle(ref, () => {
+    return { show, hideModel };
+  });
   return (
-    (props.show && (
-      <Animated.View
-        style={[
-          styles.fadingContainer,
-          {
-            opacity: 1, // Bind opacity to animated value
-            top,
-            justifyContent: 'flex-end',
-          },
-        ]}>
-        {/* <TouchableOpacity></TouchableOpacity> */}
-        <Animated.View>{props.renderContent && props.renderContent()}</Animated.View>
-      </Animated.View>
-    )) ||
-    null
+    <Modal
+      visible={modalVisible}
+      transparent={true}
+      animationType={'slide'}
+      onRequestClose={() => {
+        changeModalVisible(!modalVisible);
+      }}>
+      <TouchableHighlight
+        style={{
+          height: '100%',
+          backgroundColor: 'rgba(0,0,0,0.4)',
+          justifyContent: 'flex-end',
+        }}
+        underlayColor="none">
+        {props.children}
+      </TouchableHighlight>
+    </Modal>
   );
-}
-
+});
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import type { Ref } from 'react';
 import {
   Text,
   View,
@@ -21,11 +22,12 @@ import { ServiceType } from '@/enums/base';
 import Icon from 'react-native-vector-icons/Ionicons';
 import CoverLayer from '@/components/coverLayer';
 import BuyModel from '@/components/shopping/buyModel';
-
+import type { ModeRef } from '@/components/coverLayer/type';
 import type { BuyModelProps } from '@/components/shopping/type';
+type CoverLayer2 = typeof CoverLayer;
 export default function Introduce(props) {
   const params = props.route.params;
-  const cover = useRef();
+  const cover = useRef<ModeRef>(null);
   const [productInfo, changeProductInfo] = useState<
     {
       name: string;
@@ -38,8 +40,11 @@ export default function Introduce(props) {
       recommendList: { name: string; subTitle?: string; price?: number; id: number }[];
       brandInfo: { id?: number; productCount: number; logo: string };
       brandName: string;
-    } & BuyModelProps
+      skuList: { name: string }[];
+      id: number;
+    } & Omit<BuyModelProps, 'productId' | 'productName'>
   >({
+    id: 0,
     name: '',
     subTitle: '',
     price: 0,
@@ -51,11 +56,12 @@ export default function Introduce(props) {
     brandInfo: { productCount: 0, logo: '' },
     brandName: '',
     attributeList: [],
+    skuList: [],
   });
   const [modalVisible, changeModalVisible] = useState<boolean>(false);
   useEffect(() => {
     getInfoById({ id: params.id }).then((res) => {
-      console.log('res', res.data.attributeList);
+      // console.log('res', res.data.skuList);
       changeProductInfo(res.data);
     });
   }, []);
@@ -114,47 +120,22 @@ export default function Introduce(props) {
     },
   ];
   function pressCar() {
-    changeModalVisible(true);
+    if (cover.current) {
+      cover.current.show();
+    }
   }
-  function renderContent() {
-    return (
-      <View
-        style={{
-          backgroundColor: '#fff',
-          height: 400,
-          borderTopEndRadius: 20,
-          borderTopLeftRadius: 20,
-          padding: 20,
-        }}>
-        <Text onPress={() => changeModalVisible(false)}>354</Text>
-      </View>
-    );
-  }
-  function close() {
-    console.log('close');
 
-    changeModalVisible(false);
-  }
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={{ flex: 1 }}>
-        <Modal
-          visible={modalVisible}
-          transparent={true}
-          animationType={'slide'}
-          onRequestClose={() => {
-            changeModalVisible(!modalVisible);
-          }}>
-          <TouchableHighlight
-            style={{
-              height: '100%',
-              backgroundColor: 'rgba(0,0,0,0.4)',
-              justifyContent: 'flex-end',
-            }}
-            underlayColor="none">
-            <BuyModel attributeList={productInfo.attributeList}></BuyModel>
-          </TouchableHighlight>
-        </Modal>
+        <CoverLayer ref={cover} visible={modalVisible}>
+          <BuyModel
+            attributeList={productInfo.attributeList}
+            skuList={productInfo.skuList}
+            price={productInfo.price}
+            productId={productInfo.id}
+            productName={productInfo.name}></BuyModel>
+        </CoverLayer>
         <View>
           <View style={{ height: 300, backgroundColor: '#fff' }}>
             <Swiper swiperItem={swiperItem}></Swiper>
