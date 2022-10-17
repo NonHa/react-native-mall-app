@@ -13,10 +13,7 @@ import {
 import type { CoverLayerProps, ModeRef } from './type';
 const c_deviceHeight = Dimensions.get('window').height;
 
-export default forwardRef<ModeRef, CoverLayerProps>(function CoverLayer(
-  props: CoverLayerProps,
-  ref,
-) {
+export default forwardRef<ModeRef, CoverLayerProps>(function CoverLayer(props, ref) {
   const [modalVisible, changeModalVisible] = useState<boolean>(false);
 
   function show() {

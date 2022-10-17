@@ -21,6 +21,7 @@ import CollectInfo from '@/views/user/operate/collect/collectInfo';
 import SubjectDetail from '@/views/subject/detail';
 import WriteComment from '@/components/comment/write';
 import ProductInfo from '@/views/product/info';
+import Car from '@/components/shopping/car';
 export const navsConfig: ScreenProps[] = [
   {
     name: 'Root',
@@ -32,7 +33,11 @@ export const navsConfig: ScreenProps[] = [
       headerRight: () => (
         <View style={styles.headerLeft}>
           <Icon style={styles.headerLeftIcon} name="search" size={24}></Icon>
-          <Icon style={styles.headerLeftIcon} name="shopping-cart" size={24}></Icon>
+          <Icon
+            style={styles.headerLeftIcon}
+            name="shopping-cart"
+            size={24}
+            onPress={() => navigation.push('Car')}></Icon>
         </View>
       ),
     }),
@@ -99,6 +104,14 @@ export const navsConfig: ScreenProps[] = [
     component: ProductInfo,
     option: {
       title: '商品信息',
+    },
+  },
+
+  {
+    name: 'Car',
+    component: Car,
+    option: {
+      title: '购物车',
     },
   },
 ];

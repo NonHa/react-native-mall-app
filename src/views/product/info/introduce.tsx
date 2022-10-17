@@ -24,7 +24,7 @@ import CoverLayer from '@/components/coverLayer';
 import BuyModel from '@/components/shopping/buyModel';
 import type { ModeRef } from '@/components/coverLayer/type';
 import type { BuyModelProps } from '@/components/shopping/type';
-type CoverLayer2 = typeof CoverLayer;
+
 export default function Introduce(props) {
   const params = props.route.params;
   const cover = useRef<ModeRef>(null);
@@ -128,7 +128,7 @@ export default function Introduce(props) {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={{ flex: 1 }}>
-        <CoverLayer ref={cover} visible={modalVisible}>
+        <CoverLayer ref={cover}>
           <BuyModel
             attributeList={productInfo.attributeList}
             skuList={productInfo.skuList}
