@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, ScrollView, SafeAreaView, Image } from 'react-native';
 import Radio from '../radio';
-import { getCarList } from '@/api/car';
+import { getCarList, generateOrder } from '@/api/car';
 export default function Car() {
   const [allCheck, changeAllCheck] = useState({});
   const [total, changeTotal] = useState(0);
+  const [cartIds, changeCartIds] = useState<number[]>([]);
   const [carList, changeCarList] = useState<
     {
       id: number;
@@ -37,6 +38,7 @@ export default function Car() {
     carList.forEach((v) => {
       v.productList.forEach((k) => {
         if (allCheck[k.id]) {
+          cartIds.push(allCheck[k.id]);
           total += k.price * k.quantity;
         }
       });
@@ -66,6 +68,10 @@ export default function Car() {
         [index]: val,
       });
     }
+  }
+
+  function submit() {
+    generateOrder({ cartIds }).then((res) => {});
   }
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -164,7 +170,8 @@ export default function Car() {
               backgroundColor: 'red',
               borderRadius: 30,
               color: '#fff',
-            }}>
+            }}
+            onPress={() => submit()}>
             结算
           </Text>
         </View>
