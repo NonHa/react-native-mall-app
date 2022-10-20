@@ -61,7 +61,7 @@ export default function Introduce(props) {
   const [modalVisible, changeModalVisible] = useState<boolean>(false);
   useEffect(() => {
     getInfoById({ id: params.id }).then((res) => {
-      // console.log('res', res.data.skuList);
+      // console.log('res', res.data);
       changeProductInfo(res.data);
     });
   }, []);
@@ -130,11 +130,9 @@ export default function Introduce(props) {
       <ScrollView style={{ flex: 1 }}>
         <CoverLayer ref={cover}>
           <BuyModel
-            attributeList={productInfo.attributeList}
-            skuList={productInfo.skuList}
-            price={productInfo.price}
             productId={productInfo.id}
-            productName={productInfo.name}></BuyModel>
+            productName={productInfo.name}
+            {...productInfo}></BuyModel>
         </CoverLayer>
         <View>
           <View style={{ height: 300, backgroundColor: '#fff' }}>

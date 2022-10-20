@@ -18,7 +18,11 @@ export default function BuyModel(props: BuyModelProps) {
   const [buyNum, changeBuyNum] = useState(0);
   const [total, changeTotal] = useState(0);
   const [price, changePrice] = useState(props.price);
-  const [skuId, changeSkuId] = useState(0);
+  const [productSku, changeProductSku] = useState<{
+    productSkuId: number;
+    productSkuCode: number;
+    productAttr: string;
+  }>({ productSkuId: 0, productSkuCode: 0, productAttr: '' });
 
   useEffect(() => {
     props.skuList.forEach((v) => {
@@ -52,7 +56,11 @@ export default function BuyModel(props: BuyModelProps) {
 
     props.skuList.forEach((v) => {
       if (v.selectType === str) {
-        changeSkuId(v.id);
+        changeProductSku({
+          productSkuId: v.id,
+          productSkuCode: v.skuCode,
+          productAttr: JSON.stringify(v.spData),
+        });
         changePrice(v.price);
       }
     });
@@ -67,11 +75,11 @@ export default function BuyModel(props: BuyModelProps) {
   }
   function submit() {
     addProductToCar({
+      ...props,
       price: price,
       quantity: buyNum,
-      productId: props.productId,
-      productName: props.productName,
-      productSkuId: skuId,
+      ...productSku,
+      productBrand: props.brandName,
     }).then((res) => {});
   }
   return (

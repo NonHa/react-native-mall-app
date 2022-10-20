@@ -6,6 +6,8 @@ enum User {
   UserInfo = '/sso/info',
   addMemeber = '/sso/addMemeber',
   updateMemeber = '/sso/updateMemeber',
+  memberAddress = '/member/address/list',
+  addMemberAddress = '/member/address/add',
 }
 
 export const userLogin = (data: { username: string; password: string; platform: string }) => {
@@ -22,4 +24,12 @@ export const addMemeber = (data) => {
 
 export const updateMemeber = (data: UserMessage) => {
   return Http.post(User.updateMemeber, data);
+};
+
+export const memberAddress = () => {
+  return Http.post(User.memberAddress);
+};
+
+export const addMemberAddress = (data) => {
+  return Http.post(User.addMemberAddress, data);
 };

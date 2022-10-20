@@ -11,6 +11,7 @@ export type BuyModelProps = {
     spData: string;
     selectType: {};
     price: number;
+    skuCode: number;
   }[];
   price: number;
   productId: number;

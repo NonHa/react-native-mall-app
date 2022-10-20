@@ -16,6 +16,8 @@ export const addProductToCar = (data: {
   productId: number;
   productName: string;
   productSkuId: number;
+  productSkuCode: number;
+  productAttr: string;
 }) => {
   return Http.post(Product.addProductToCar, data);
 };

@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, ScrollView, SafeAreaView, Image } from 'react-native';
 import Radio from '../radio';
 import { getCarList, generateOrder } from '@/api/car';
-export default function Car() {
+import { useNavigation } from '@react-navigation/native';
+
+export default function Car({ navigation }) {
   const [allCheck, changeAllCheck] = useState({});
   const [total, changeTotal] = useState(0);
   const [cartIds, changeCartIds] = useState<number[]>([]);
@@ -10,7 +12,6 @@ export default function Car() {
     {
       id: number;
       productBrand: string;
-
       productList: {
         id: number;
         productName: string;
@@ -71,7 +72,10 @@ export default function Car() {
   }
 
   function submit() {
-    generateOrder({ cartIds }).then((res) => {});
+    navigation.push('SubmitOrder', {
+      cartIds,
+    });
+    // generateOrder({ cartIds }).then((res) => {});
   }
   return (
     <SafeAreaView style={{ flex: 1 }}>

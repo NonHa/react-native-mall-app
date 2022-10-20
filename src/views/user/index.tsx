@@ -25,6 +25,7 @@ export default function User() {
     {
       rightIcon: 'location',
       title: '地址管理',
+      goPath: '/Address',
     },
   ];
   const jump2 = [
