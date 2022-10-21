@@ -14,11 +14,15 @@ export default function Header(props: HeaderProps) {
         flexDirection: 'row',
         alignItems: 'center',
         paddingVertical: 13,
+        justifyContent: 'space-between',
       }}>
-      <FontAwesome5 name="chevron-left" size={20}></FontAwesome5>
-      <Text style={{ marginLeft: 10, fontSize: 25, color: '#000' }} onPress={() => props.close()}>
-        {props.leftTitle || '23'}
-      </Text>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <FontAwesome5 name="chevron-left" size={20}></FontAwesome5>
+        <Text style={{ marginLeft: 10, fontSize: 25, color: '#000' }} onPress={() => props.close()}>
+          {props.leftTitle || '23'}
+        </Text>
+      </View>
+      <View>{props.rightRender && props.rightRender()}</View>
     </View>
   );
 }

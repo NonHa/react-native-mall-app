@@ -18,27 +18,15 @@ import Radio from '@/components/radio';
 import BasePage from '@/components/BasePage';
 import Picker from 'react-native-picker';
 import { cityData } from '@/utils/city';
-
-export default function Address() {
-  const [addressList, changeAddressList] = useState<
-    {
-      id: string;
-      name: string;
-      phoneNumber: string;
-      city: string;
-      province: string;
-      region: string;
-      detailAddress: string;
-    }[]
-  >([]);
-  const [isOprate, changeIsOprate] = useState(false);
+import { AddressModel } from './type';
+export default function Address(props: { isOprate: boolean }) {
+  const [addressList, changeAddressList] = useState<AddressModel[]>([]);
   const [defaultAddress, changeDefaultAddress] = useState(0);
   const [addressModel, changeAddressModel] = useState<{
     name: string;
     phoneNumber: string;
     defaultStatus: boolean;
     detailAddress: string;
-
     province: string;
     city: string;
     region: string;
@@ -46,8 +34,10 @@ export default function Address() {
   const [modalVisible, changeModalVisible] = useState<boolean>(false);
   function getAddressList() {
     memberAddress().then((res) => {
-      console.log('res', res);
       changeAddressList(res.data);
+      if (res.data && res.data.length > 0) {
+        changeDefaultAddress(res.data[0].id);
+      }
     });
   }
   useEffect(() => {
@@ -81,8 +71,6 @@ export default function Address() {
   });
 
   function _onSubmit() {
-    console.log(addressModel);
-
     addMemberAddress({ ...addressModel, defaultStatus: addressModel.defaultStatus ? 1 : 0 }).then(
       (res) => {
         console.log('res', res);
@@ -92,6 +80,20 @@ export default function Address() {
         }
       },
     );
+  }
+  function editItem(item) {
+    changeAddressModel({ ...item, defaultStatus: item.defaultStatus === 1 });
+    changeModalVisible(true);
+  }
+  function radioChange(item) {
+    addMemberAddress({ ...item, defaultStatus: defaultAddress !== item.id ? 1 : 0 }).then((res) => {
+      console.log('res', res);
+      if (res.code === 200) {
+        changeModalVisible(false);
+        changeDefaultAddress(item.id);
+        // getAddressList();
+      }
+    });
   }
   const formList: {
     label: string;
@@ -194,8 +196,10 @@ export default function Address() {
   ];
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ paddingHorizontal: 10, flex: 1 }}>
+      <View style={{ paddingHorizontal: 10, flex: 1, backgroundColor: '#ccc' }}>
         <FlatList
+          showsVerticalScrollIndicator={false}
+          ItemSeparatorComponent={null}
           style={{ flex: 1 }}
           data={addressList}
           renderItem={({ item, index }) => {
@@ -208,23 +212,29 @@ export default function Address() {
                       padding: 10,
                       alignItems: 'center',
                       backgroundColor: '#fff',
-                      marginTop: index === 0 || !isOprate ? 0 : 10,
+                      marginTop: !props.isOprate ? 0 : 10,
                       borderTopRightRadius: index === 0 ? 10 : 0,
                       borderTopLeftRadius: index === 0 ? 10 : 0,
-                      borderBottomLeftRadius: index === addressList.length - 1 ? 10 : 0,
-                      borderBottomRightRadius: index === addressList.length - 1 ? 10 : 0,
+                      borderBottomLeftRadius:
+                        !props.isOprate && index === addressList.length - 1 ? 10 : 0,
+                      borderBottomRightRadius:
+                        !props.isOprate && index === addressList.length - 1 ? 10 : 0,
                     },
-                    isOprate ? styles.isOprate : styles.normal,
+                    props.isOprate ? styles.isOprate : styles.normal,
                   ]}>
-                  <Image
-                    source={{ uri: 'hh' }}
+                  <View
                     style={{
                       height: 50,
                       width: 50,
                       borderRadius: 50,
-                      borderWidth: 1,
-                      borderColor: '#000',
-                    }}></Image>
+                      backgroundColor: 'red',
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      margin: 10,
+                    }}>
+                    <FontAwesome5 name="home" size={30} color="#fff"></FontAwesome5>
+                  </View>
                   <View style={{ flex: 1 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                       <Text style={{ fontSize: 20, color: '#000', alignItems: 'center' }}>
@@ -241,12 +251,12 @@ export default function Address() {
                       {item.detailAddress}
                     </Text>
                   </View>
-                  <FontAwesome5 name="edit"></FontAwesome5>
+                  <FontAwesome5 name="edit" onPress={() => editItem(item)}></FontAwesome5>
                 </View>
-                {isOprate ? (
+                {props.isOprate ? (
                   <View
                     style={[
-                      isOprate ? styles.isShowOprate : {},
+                      props.isOprate ? styles.isShowOprate : {},
                       {
                         padding: 10,
                         backgroundColor: '#fff',
@@ -263,7 +273,7 @@ export default function Address() {
                       <Radio
                         value={defaultAddress}
                         label={item.id}
-                        onChange={() => changeDefaultAddress(item.id)}>
+                        onChange={() => radioChange(item)}>
                         默认
                       </Radio>
                       <Text>删除</Text>
@@ -287,7 +297,7 @@ export default function Address() {
             lineHeight: 40,
             fontSize: 20,
           }}
-          onPress={() => changeModalVisible(!modalVisible)}>
+          onPress={() => editItem({})}>
           + 添加收货地址
         </Text>
       </View>
@@ -353,13 +363,14 @@ const styles = StyleSheet.create({
   isOprate: {
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
+    margin: 0,
   },
   isShowOprate: {
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
   },
   normal: {
-    // marginTop: 10,
+    margin: 0,
   },
   input: {
     backgroundColor: '#eeee',

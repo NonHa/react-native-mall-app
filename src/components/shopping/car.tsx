@@ -1,51 +1,57 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, ScrollView, SafeAreaView, Image } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, SafeAreaView, Image, Modal } from 'react-native';
 import Radio from '../radio';
 import { getCarList, generateOrder } from '@/api/car';
 import { useNavigation } from '@react-navigation/native';
-
+import BasePage from '@/components/BasePage';
+import SubmitOrder from './submitOrder';
+import { ProductList } from './type';
 export default function Car({ navigation }) {
   const [allCheck, changeAllCheck] = useState({});
   const [total, changeTotal] = useState(0);
   const [cartIds, changeCartIds] = useState<number[]>([]);
-  const [carList, changeCarList] = useState<
-    {
-      id: number;
-      productBrand: string;
-      productList: {
-        id: number;
-        productName: string;
-        productPic: string;
-        price: number;
-        quantity: number;
-      }[];
-    }[]
-  >([]);
+  const [carList, changeCarList] = useState<ProductList>([]);
+  const [modalVisible, changeModalVisible] = useState<boolean>(false);
+
   useEffect(() => {
     const keys = {};
     getCarList().then((res) => {
-      res.data.forEach((v, index) => {
+      // console.log('res', res.data);
+      const brandList = [];
+      res.data.forEach((v) => {
+        if (!brandList.includes(v.productBrand)) {
+          brandList.push({
+            name: v.productBrand,
+            productList: res.data.filter((k) => k.productBrand === v.productBrand),
+          });
+        }
+      });
+
+      brandList.forEach((v, index) => {
         keys[index] = null;
         v.productList.forEach((k) => {
           keys[k.id] = null;
         });
       });
       changeAllCheck(keys);
-      changeCarList(res.data);
+      changeCarList(brandList);
     });
   }, []);
   useEffect(() => {
     let total = 0;
+    const ids = [];
+
     carList.forEach((v) => {
       v.productList.forEach((k) => {
         if (allCheck[k.id]) {
-          cartIds.push(allCheck[k.id]);
+          ids.push(k.id);
+
           total += k.price * k.quantity;
         }
       });
     });
+    changeCartIds(ids);
     changeTotal(total);
-    console.log('allCheck', allCheck);
   }, [allCheck]);
   function changeSelect(val, index) {
     const { productList } = carList[index];
@@ -54,6 +60,7 @@ export default function Car({ navigation }) {
       productList.forEach((v) => {
         item[v.id] = v.id;
       });
+
       changeAllCheck({
         ...allCheck,
         ...item,
@@ -106,7 +113,7 @@ export default function Car({ navigation }) {
                     marginLeft: 10,
                   }}>
                   <View>
-                    <Text style={{ fontSize: 20, color: '#000' }}>{v.productBrand}</Text>
+                    <Text style={{ fontSize: 20, color: '#000' }}>{v.name}</Text>
                   </View>
                   <Text>23</Text>
                 </View>
@@ -175,11 +182,22 @@ export default function Car({ navigation }) {
               borderRadius: 30,
               color: '#fff',
             }}
-            onPress={() => submit()}>
+            onPress={() => changeModalVisible(true)}>
             结算
           </Text>
         </View>
       </View>
+
+      <Modal
+        visible={modalVisible}
+        transparent={true}
+        onRequestClose={() => {
+          changeModalVisible(!modalVisible);
+        }}>
+        <BasePage headerProps={{ leftTitle: '确认订单', close: () => changeModalVisible(false) }}>
+          <SubmitOrder cartIds={cartIds}></SubmitOrder>
+        </BasePage>
+      </Modal>
     </SafeAreaView>
   );
 }

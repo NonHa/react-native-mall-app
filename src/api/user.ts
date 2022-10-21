@@ -1,5 +1,6 @@
 import Http from '../utils/http';
 import { UserMessage } from '../views/user/message/type';
+import { AddressModel } from '@/views/user/address/type';
 enum User {
   login = '/admin/login',
   advertiseList = '/home/advertise/list',
@@ -27,7 +28,7 @@ export const updateMemeber = (data: UserMessage) => {
 };
 
 export const memberAddress = () => {
-  return Http.post(User.memberAddress);
+  return Http.post<AddressModel[]>(User.memberAddress);
 };
 
 export const addMemberAddress = (data) => {

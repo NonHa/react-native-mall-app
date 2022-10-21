@@ -1,14 +1,18 @@
-import React from 'react';
-import { Text, View, StyleSheet, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Text, View, StyleSheet, ScrollView, Modal } from 'react-native';
 import Message from './message';
 import Oprate from './operate';
 import Jump from './jump';
 import { useAppDispatch } from '../../app/hooks';
 import { getInfo } from '../../store/features/user/infoSlice';
-
+import BasePage from '@/components/BasePage';
+import Address from './address';
 export default function User() {
   const dispatch = useAppDispatch();
   dispatch(getInfo());
+  const [modalVisible, changeModalVisible] = useState<boolean>(false);
+  const [isOprate, changeIsOprate] = useState<boolean>(false);
+
   const jump1 = [
     {
       rightIcon: 'browsers',
@@ -25,7 +29,9 @@ export default function User() {
     {
       rightIcon: 'location',
       title: '地址管理',
-      goPath: '/Address',
+      pressFun: () => {
+        changeModalVisible(true);
+      },
     },
   ];
   const jump2 = [
@@ -44,6 +50,10 @@ export default function User() {
       title: '系统设置',
     },
   ];
+
+  const addressHeaderRender = () => {
+    return <Text onPress={() => changeIsOprate(!isOprate)}>{isOprate ? '完成' : '管理'}</Text>;
+  };
   return (
     <ScrollView style={{ marginBottom: 10 }}>
       <Message></Message>
@@ -60,6 +70,21 @@ export default function User() {
           return <Jump key={index} {...v}></Jump>;
         })}
       </View>
+      <Modal
+        visible={modalVisible}
+        transparent={true}
+        onRequestClose={() => {
+          changeModalVisible(!modalVisible);
+        }}>
+        <BasePage
+          headerProps={{
+            leftTitle: '我的收货地址',
+            close: () => changeModalVisible(false),
+            rightRender: addressHeaderRender,
+          }}>
+          <Address isOprate={isOprate}></Address>
+        </BasePage>
+      </Modal>
     </ScrollView>
   );
 }

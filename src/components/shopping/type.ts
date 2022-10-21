@@ -17,3 +17,15 @@ export type BuyModelProps = {
   productId: number;
   productName: string;
 };
+
+export type ProductList = {
+  id: number;
+  productBrand: string;
+  productList: {
+    id: number;
+    productName: string;
+    productPic: string;
+    price: number;
+    quantity: number;
+  }[];
+}[];

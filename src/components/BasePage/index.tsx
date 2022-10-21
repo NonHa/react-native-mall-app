@@ -6,7 +6,7 @@ export default function BasePage(props: BasePageProps) {
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
       <Header {...props.headerProps}></Header>
-      <ScrollView style={{ flex: 1 }}>{props.children}</ScrollView>
+      {props.children}
     </View>
   );
 }
