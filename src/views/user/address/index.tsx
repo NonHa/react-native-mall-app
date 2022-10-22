@@ -19,7 +19,11 @@ import BasePage from '@/components/BasePage';
 import Picker from 'react-native-picker';
 import { cityData } from '@/utils/city';
 import { AddressModel } from './type';
-export default function Address(props: { isOprate: boolean }) {
+export default function Address(props: {
+  isOprate: boolean;
+  selectItem?: boolean;
+  selectItemFun?: (item: AddressModel) => void;
+}) {
   const [addressList, changeAddressList] = useState<AddressModel[]>([]);
   const [defaultAddress, changeDefaultAddress] = useState(0);
   const [addressModel, changeAddressModel] = useState<{
@@ -204,83 +208,87 @@ export default function Address(props: { isOprate: boolean }) {
           data={addressList}
           renderItem={({ item, index }) => {
             return (
-              <View>
-                <View
-                  style={[
-                    {
-                      flexDirection: 'row',
-                      padding: 10,
-                      alignItems: 'center',
-                      backgroundColor: '#fff',
-                      marginTop: !props.isOprate ? 0 : 10,
-                      borderTopRightRadius: index === 0 ? 10 : 0,
-                      borderTopLeftRadius: index === 0 ? 10 : 0,
-                      borderBottomLeftRadius:
-                        !props.isOprate && index === addressList.length - 1 ? 10 : 0,
-                      borderBottomRightRadius:
-                        !props.isOprate && index === addressList.length - 1 ? 10 : 0,
-                    },
-                    props.isOprate ? styles.isOprate : styles.normal,
-                  ]}>
-                  <View
-                    style={{
-                      height: 50,
-                      width: 50,
-                      borderRadius: 50,
-                      backgroundColor: 'red',
-                      flexDirection: 'row',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      margin: 10,
-                    }}>
-                    <FontAwesome5 name="home" size={30} color="#fff"></FontAwesome5>
-                  </View>
-                  <View style={{ flex: 1 }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                      <Text style={{ fontSize: 20, color: '#000', alignItems: 'center' }}>
-                        {item.name}
-                      </Text>
-                      <Text style={{ marginLeft: 10 }}>{item.phoneNumber}</Text>
-                    </View>
-                    <View style={{ marginTop: 5 }}>
-                      <Text style={{ fontSize: 15, color: '#000' }}>
-                        {item.province + ' ' + item.city + ' ' + item.region}
-                      </Text>
-                    </View>
-                    <Text style={{ marginTop: 5, fontSize: 15, color: '#000' }}>
-                      {item.detailAddress}
-                    </Text>
-                  </View>
-                  <FontAwesome5 name="edit" onPress={() => editItem(item)}></FontAwesome5>
-                </View>
-                {props.isOprate ? (
+              <TouchableHighlight
+                onPress={() => props?.selectItemFun && props?.selectItemFun(item)}
+                underlayColor="none">
+                <View>
                   <View
                     style={[
-                      props.isOprate ? styles.isShowOprate : {},
                       {
+                        flexDirection: 'row',
                         padding: 10,
+                        alignItems: 'center',
                         backgroundColor: '#fff',
+                        marginTop: !props.isOprate ? 0 : 10,
+                        borderTopRightRadius: index === 0 ? 10 : 0,
+                        borderTopLeftRadius: index === 0 ? 10 : 0,
+                        borderBottomLeftRadius:
+                          !props.isOprate && index === addressList.length - 1 ? 10 : 0,
+                        borderBottomRightRadius:
+                          !props.isOprate && index === addressList.length - 1 ? 10 : 0,
                       },
+                      props.isOprate ? styles.isOprate : styles.normal,
                     ]}>
                     <View
                       style={{
+                        height: 50,
+                        width: 50,
+                        borderRadius: 50,
+                        backgroundColor: 'red',
                         flexDirection: 'row',
+                        justifyContent: 'center',
                         alignItems: 'center',
-                        justifyContent: 'space-between',
-                        borderTopWidth: 1,
-                        borderTopColor: '#ccc',
+                        margin: 10,
                       }}>
-                      <Radio
-                        value={defaultAddress}
-                        label={item.id}
-                        onChange={() => radioChange(item)}>
-                        默认
-                      </Radio>
-                      <Text>删除</Text>
+                      <FontAwesome5 name="home" size={30} color="#fff"></FontAwesome5>
                     </View>
+                    <View style={{ flex: 1 }}>
+                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Text style={{ fontSize: 20, color: '#000', alignItems: 'center' }}>
+                          {item.name}
+                        </Text>
+                        <Text style={{ marginLeft: 10 }}>{item.phoneNumber}</Text>
+                      </View>
+                      <View style={{ marginTop: 5 }}>
+                        <Text style={{ fontSize: 15, color: '#000' }}>
+                          {item.province + ' ' + item.city + ' ' + item.region}
+                        </Text>
+                      </View>
+                      <Text style={{ marginTop: 5, fontSize: 15, color: '#000' }}>
+                        {item.detailAddress}
+                      </Text>
+                    </View>
+                    <FontAwesome5 name="edit" onPress={() => editItem(item)}></FontAwesome5>
                   </View>
-                ) : null}
-              </View>
+                  {props.isOprate ? (
+                    <View
+                      style={[
+                        props.isOprate ? styles.isShowOprate : {},
+                        {
+                          padding: 10,
+                          backgroundColor: '#fff',
+                        },
+                      ]}>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          borderTopWidth: 1,
+                          borderTopColor: '#ccc',
+                        }}>
+                        <Radio
+                          value={defaultAddress}
+                          label={item.id}
+                          onChange={() => radioChange(item)}>
+                          默认
+                        </Radio>
+                        <Text>删除</Text>
+                      </View>
+                    </View>
+                  ) : null}
+                </View>
+              </TouchableHighlight>
             );
           }}
           keyExtractor={(item, index) => item.id}></FlatList>

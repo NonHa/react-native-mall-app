@@ -9,31 +9,24 @@ import {
   Modal,
   TouchableHighlight,
 } from 'react-native';
-import { ProductList } from './type';
+import { ProductList, OrderItem } from './type';
 import { confirmOrder } from '@/api/car';
 import { AddressModel } from '@/views/user/address/type';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { generateOrder } from '@/api/car';
+import Address from '@/views/user/address';
+import BasePage from '../BasePage';
 
 export default function SubmitOrder(props: { cartIds: number[] }) {
   const [defaultAddress, changeDefaultAddress] = useState<AddressModel>({});
-  const [productList, changeProductList] = useState<
-    {
-      brand: string;
-      product: {
-        productName: string;
-        productId: number;
-        price: number;
-        quantity: number;
-        discription: string;
-        productPic: string;
-      }[];
-    }[]
-  >([]);
+  const [total, changeTotal] = useState<number>(0);
+  const [productList, changeProductList] = useState<OrderItem[]>([]);
+  const [modalVisible, changeModalVisible] = useState<boolean>(false);
+  const [isOprate, changeIsOprate] = useState<boolean>(false);
 
   function getAddressList() {
     confirmOrder({ cartIds: props.cartIds || [] }).then((res) => {
-      console.log('res.data', props.cartIds);
       const { memberReceiveAddressList, cartPromotionItemList } = res.data;
       if (memberReceiveAddressList && memberReceiveAddressList.length > 0) {
         const defaultItem = memberReceiveAddressList.filter((v) => v.defaultStatus === 1);
@@ -41,12 +34,15 @@ export default function SubmitOrder(props: { cartIds: number[] }) {
           changeDefaultAddress(defaultItem[0]);
         }
       }
-      const productGroupByBrand = [];
+      const productGroupByBrand: string[] = [];
+      let total = 0;
       cartPromotionItemList.forEach((item) => {
+        total += item.price || 0;
         if (!productGroupByBrand.includes(item.productBrand)) {
           productGroupByBrand.push(item.productBrand);
         }
       });
+      changeTotal(total);
       changeProductList(
         productGroupByBrand.map((v) => {
           return {
@@ -69,27 +65,42 @@ export default function SubmitOrder(props: { cartIds: number[] }) {
   useEffect(() => {
     getAddressList();
   }, []);
+  function _onSubmit() {
+    generateOrder({ cartIds: props.cartIds, memberReceiveAddressId: defaultAddress.id }).then(
+      (res) => {},
+    );
+  }
+  const addressHeaderRender = () => {
+    return <Text onPress={() => changeIsOprate(!isOprate)}>{isOprate ? '完成' : '管理'}</Text>;
+  };
+  function selectItemFun(item: AddressModel) {
+    changeDefaultAddress(item);
+    changeModalVisible(false);
+  }
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={{ padding: 10, backgroundColor: '#ccc', flex: 1 }}>
-        <View style={styles.address}>
-          <View style={{ padding: 5, borderRadius: 20, backgroundColor: 'red', marginRight: 10 }}>
-            <Icon name="location-sharp" color={'#fff'}></Icon>
-          </View>
-
-          <View style={{ flex: 1, overflow: 'hidden' }}>
-            <Text style={{ fontSize: 20, color: '#000' }}>{defaultAddress.detailAddress}</Text>
-            <View style={{ flexDirection: 'row', marginTop: 5 }}>
-              <Text>{defaultAddress.name}</Text>
-              <Text style={{ marginLeft: 10 }}>{defaultAddress.phoneNumber}</Text>
+        <TouchableHighlight onPress={() => changeModalVisible(true)} underlayColor="none">
+          <View style={styles.address}>
+            <View style={{ padding: 5, borderRadius: 20, backgroundColor: 'red', marginRight: 10 }}>
+              <Icon name="location-sharp" color={'#fff'}></Icon>
             </View>
+
+            <View style={{ flex: 1, overflow: 'hidden' }}>
+              <Text style={{ fontSize: 20, color: '#000' }}>{defaultAddress.detailAddress}</Text>
+              <View style={{ flexDirection: 'row', marginTop: 5 }}>
+                <Text>{defaultAddress.name}</Text>
+                <Text style={{ marginLeft: 10 }}>{defaultAddress.phoneNumber}</Text>
+              </View>
+            </View>
+            <MaterialIcons
+              name="keyboard-arrow-right"
+              size={18}
+              color="#ccc"
+              style={{ marginLeft: 10 }}></MaterialIcons>
           </View>
-          <MaterialIcons
-            name="keyboard-arrow-right"
-            size={18}
-            color="#ccc"
-            style={{ marginLeft: 10 }}></MaterialIcons>
-        </View>
+        </TouchableHighlight>
+
         {productList.map((v, index) => {
           return (
             <View
@@ -131,9 +142,49 @@ export default function SubmitOrder(props: { cartIds: number[] }) {
           );
         })}
       </ScrollView>
-      <View>
-        <Text>343</Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: 10,
+        }}>
+        <View></View>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
+            <Text>合计：</Text>
+            <Text>￥</Text>
+            <Text style={{ marginRight: 5, fontSize: 25 }}>{total}</Text>
+          </View>
+          <Text
+            style={{
+              fontSize: 20,
+              paddingVertical: 5,
+              paddingHorizontal: 30,
+              backgroundColor: 'red',
+              borderRadius: 30,
+              color: '#fff',
+            }}
+            onPress={() => _onSubmit()}>
+            提交订单
+          </Text>
+        </View>
       </View>
+      <Modal
+        visible={modalVisible}
+        transparent={true}
+        onRequestClose={() => {
+          changeModalVisible(!modalVisible);
+        }}>
+        <BasePage
+          headerProps={{
+            leftTitle: '添加收货地址',
+            close: () => changeModalVisible(false),
+            rightRender: addressHeaderRender,
+          }}>
+          <Address isOprate={isOprate} selectItem selectItemFun={selectItemFun}></Address>
+        </BasePage>
+      </Modal>
     </SafeAreaView>
   );
 }

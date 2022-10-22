@@ -1,5 +1,5 @@
 export type AddressModel = {
-  id: string;
+  id: number;
   name: string;
   phoneNumber: string;
   city: string;

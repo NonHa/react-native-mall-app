@@ -4,7 +4,9 @@ import type { StackScreenProps } from '@react-navigation/stack';
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { BottomTabNavigationOptions } from '@react-navigation/bottom-tabs';
+import { useLinkTo } from '@react-navigation/native';
 
+export type UseLinkToReturnType = ReturnType<typeof useLinkTo>;
 export type HomeTabParamList = {
   Popular: undefined;
   Latest: undefined;

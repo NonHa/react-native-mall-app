@@ -1,19 +1,26 @@
 import React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, TouchableHighlight } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import type { UseLinkToReturnType } from '#/navigation';
 
-export default class ClickTabs extends React.Component {
-  constructor(props: any) {
+export default class ClickTabs extends React.Component<{ linkTo: UseLinkToReturnType }> {
+  constructor(props) {
     super(props);
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.item}>
-          <Text>我的订单</Text>
-          <Text>我的订单</Text>
-        </View>
+        <TouchableHighlight
+          style={styles.item}
+          onPress={() => this.props.linkTo('/Order')}
+          underlayColor="none">
+          <View>
+            <Text>我的订单</Text>
+            <Text>我的订单</Text>
+          </View>
+        </TouchableHighlight>
+
         <View style={styles.item}>
           <Text>优惠券</Text>
           <Text>待付款</Text>

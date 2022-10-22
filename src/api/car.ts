@@ -15,7 +15,6 @@ export const confirmOrder = (data) => {
 export const generateOrder = (data: {
   memberReceiveAddressId?: number;
   couponId?: number;
-  memberReceiveAddressId?: number;
   payType?: number;
   cartIds: number[];
 }) => {

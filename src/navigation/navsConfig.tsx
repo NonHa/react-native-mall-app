@@ -24,6 +24,7 @@ import ProductInfo from '@/views/product/info';
 import Car from '@/components/shopping/car';
 import SubmitOrder from '@/components/shopping/submitOrder';
 import Address from '@/views/user/address';
+import Order from '@/views/order';
 export const navsConfig: ScreenProps[] = [
   {
     name: 'Root',
@@ -121,6 +122,13 @@ export const navsConfig: ScreenProps[] = [
     component: SubmitOrder,
     option: {
       title: '提交订单',
+    },
+  },
+  {
+    name: 'Order',
+    component: Order,
+    option: {
+      title: '我的订单',
     },
   },
   {

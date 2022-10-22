@@ -9,7 +9,7 @@ export default function Oprate() {
 
   return (
     <View>
-      <ClickTabs></ClickTabs>
+      <ClickTabs linkTo={linkTo}></ClickTabs>
       <Collect linkTo={linkTo}></Collect>
     </View>
   );

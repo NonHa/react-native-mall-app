@@ -29,3 +29,15 @@ export type ProductList = {
     quantity: number;
   }[];
 }[];
+
+export type OrderItem = {
+  brand: string;
+  product: {
+    productName: string;
+    productId: number;
+    price: number;
+    quantity: number;
+    discription: string;
+    productPic: string;
+  }[];
+};

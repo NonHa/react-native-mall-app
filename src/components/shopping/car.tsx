@@ -78,12 +78,6 @@ export default function Car({ navigation }) {
     }
   }
 
-  function submit() {
-    navigation.push('SubmitOrder', {
-      cartIds,
-    });
-    // generateOrder({ cartIds }).then((res) => {});
-  }
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={{ flex: 1 }}>
