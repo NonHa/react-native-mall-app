@@ -1,7 +1,8 @@
 import React from 'react';
-import type { ModalBaseProps } from 'react-native';
+import type { ModalBaseProps, ViewStyle } from 'react-native';
 export type CoverLayerProps = {
   children: React.ReactNode;
+  touchableStyle?: ViewStyle;
 } & ModalBaseProps;
 
 export type ModeRef = {

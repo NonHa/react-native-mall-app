@@ -13,7 +13,10 @@ import {
 import type { CoverLayerProps, ModeRef } from './type';
 const c_deviceHeight = Dimensions.get('window').height;
 
-export default forwardRef<ModeRef, CoverLayerProps>(function CoverLayer(props, ref) {
+export default forwardRef<ModeRef, CoverLayerProps>(function CoverLayer(
+  props = { animationType: 'slide', children: null },
+  ref,
+) {
   const [modalVisible, changeModalVisible] = useState<boolean>(false);
 
   function show() {
@@ -29,16 +32,19 @@ export default forwardRef<ModeRef, CoverLayerProps>(function CoverLayer(props, r
     <Modal
       visible={modalVisible}
       transparent={true}
-      animationType={'slide'}
+      animationType={props.animationType}
       onRequestClose={() => {
         changeModalVisible(!modalVisible);
       }}>
       <TouchableHighlight
-        style={{
-          height: '100%',
-          backgroundColor: 'rgba(0,0,0,0.4)',
-          justifyContent: 'flex-end',
-        }}
+        style={[
+          {
+            height: '100%',
+            backgroundColor: 'rgba(0,0,0,0.4)',
+            justifyContent: 'flex-end',
+          },
+          props.touchableStyle,
+        ]}
         underlayColor="none">
         {props.children}
       </TouchableHighlight>

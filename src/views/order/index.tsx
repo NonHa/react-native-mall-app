@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, ScrollView, Modal } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import ShowItem from './showItem';
+import { OrderStatus, OrderConfirmStatus } from '@/enums/base';
 export default function Order() {
   const Tab = createMaterialTopTabNavigator();
 
   return (
     <Tab.Navigator
-      initialRouteName="product"
+      initialRouteName="All"
       screenOptions={{
         tabBarIndicatorStyle: {
           backgroundColor: '#fff',
@@ -15,32 +16,32 @@ export default function Order() {
         lazy: true,
       }}>
       <Tab.Screen
-        name="product"
-        initialParams={{ collectType: 0 }}
+        name="All"
+        initialParams={{}}
         component={ShowItem}
         options={{ tabBarLabel: '全部' }}
       />
       <Tab.Screen
-        name="product2"
-        initialParams={{ collectType: 1 }}
+        name="Obligation"
+        initialParams={{ status: OrderStatus.obligation }}
         component={ShowItem}
         options={{ tabBarLabel: '待付款' }}
       />
       <Tab.Screen
-        name="subject3"
-        initialParams={{ collectType: 2 }}
+        name="Pending"
+        initialParams={{ status: OrderStatus.pending }}
         component={ShowItem}
         options={{ tabBarLabel: '待发货' }}
       />
       <Tab.Screen
-        name="subject5"
-        initialParams={{ collectType: 4 }}
+        name="confirm"
+        initialParams={{ status: OrderStatus.waitreceive }}
         component={ShowItem}
         options={{ tabBarLabel: '待收货' }}
       />
       <Tab.Screen
-        name="detail4"
-        initialParams={{ collectType: 3 }}
+        name="comment"
+        initialParams={{ status: OrderStatus.waitConment }}
         component={ShowItem}
         options={{ tabBarLabel: '待评价' }}
       />
