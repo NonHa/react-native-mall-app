@@ -7,7 +7,9 @@ import { useAppDispatch } from '../../app/hooks';
 import { getInfo } from '../../store/features/user/infoSlice';
 import BasePage from '@/components/BasePage';
 import Address from './address';
-export default function User() {
+import { HomeTabScreenProps } from '#/navigation';
+
+export default function User(props: HomeTabScreenProps<'User'>) {
   const dispatch = useAppDispatch();
   dispatch(getInfo());
   const [modalVisible, changeModalVisible] = useState<boolean>(false);

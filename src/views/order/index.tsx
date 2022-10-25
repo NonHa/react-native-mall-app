@@ -3,8 +3,9 @@ import { Text, View, StyleSheet, ScrollView, Modal } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import ShowItem from './showItem';
 import { OrderStatus, OrderConfirmStatus } from '@/enums/base';
+import { OrderTabParamList } from '#/navigation';
 export default function Order() {
-  const Tab = createMaterialTopTabNavigator();
+  const Tab = createMaterialTopTabNavigator<OrderTabParamList>();
 
   return (
     <Tab.Navigator
@@ -15,12 +16,7 @@ export default function Order() {
         },
         lazy: true,
       }}>
-      <Tab.Screen
-        name="All"
-        initialParams={{}}
-        component={ShowItem}
-        options={{ tabBarLabel: '全部' }}
-      />
+      <Tab.Screen name="All" component={ShowItem} options={{ tabBarLabel: '全部' }} />
       <Tab.Screen
         name="Obligation"
         initialParams={{ status: OrderStatus.obligation }}

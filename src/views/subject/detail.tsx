@@ -23,9 +23,11 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import type { SwiperItem } from '@/components/Swiper/type';
 import type { SubjectItemState } from './type';
 import type { SubjectComment } from '@/components/comment/type';
-export default function SubjectDetail(props) {
+import type { RootStackScreenProps } from '#/navigation';
+
+export default function SubjectDetail(props: RootStackScreenProps<'SubjectDetail'>) {
   const linkTo = useLinkTo();
-  const navigetion = useNavigation();
+  const navigetion = useNavigation<RootStackScreenProps<'WriteComment'>['navigation']>();
   // console.log('props', props);
 
   const params = props.route.params;
@@ -80,7 +82,7 @@ export default function SubjectDetail(props) {
       changeCommentList([...commentList, ...res.data.list]);
     });
   }
-  function collectCount(item) {
+  function collectCount() {
     return (
       <View>
         <View style={styles.loveAndTap}>

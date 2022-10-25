@@ -22,6 +22,7 @@ import Love from './info/love';
 import { getHome, getBrand, getAdvertise } from '../../api/home';
 import type { SwiperItem } from '../../components/Swiper/type';
 import { ProductState } from './info/type';
+import { HomeTabScreenProps } from '#/navigation';
 const styles = StyleSheet.create({
   container: {
     height: 200,
@@ -51,9 +52,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class Home extends React.Component<any, ProductState> {
-  constructor(props: any) {
+export default class Home extends React.Component<HomeTabScreenProps<'Home'>, ProductState> {
+  constructor(props: HomeTabScreenProps<'Home'>) {
     super(props);
+
     this.state = {
       brandList: [],
       advertiseList: [],

@@ -14,20 +14,22 @@ import { connect } from 'react-redux';
 import Picker from 'react-native-picker';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import type { CameraOptions } from 'react-native-image-picker';
-import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
+import { DateTimePickerAndroid, DateTimePickerEvent } from '@react-native-community/datetimepicker';
 
 import Jump from '../jump';
 import { uploadFile } from '@/utils/http';
 import { updateMemeber } from '../../../api/user';
-import { UserMessage } from './type';
+import type { UserInfo } from '#/index';
 import { TimeDateFormat } from '../../../utils/timeFormat';
 import Radio from '@/components/radio';
 import { cityData } from '@/utils/city';
+import type { RootState } from '@/store';
+
 class UseMessage extends React.Component<
-  { info: UserMessage },
-  { modifyForm: UserMessage; setDate: Date }
+  { info: UserInfo },
+  { modifyForm: UserInfo; setDate: Date }
 > {
-  constructor(props: { info: UserMessage }) {
+  constructor(props: { info: UserInfo }) {
     super(props);
     this.state = {
       modifyForm: {
@@ -69,12 +71,12 @@ class UseMessage extends React.Component<
       is24Hour: true,
     });
   }
-  _setTime(event, date) {
+  _setTime(event: DateTimePickerEvent) {
     this.setState((state) => {
       return {
         modifyForm: {
           ...this.state.modifyForm,
-          birthday: TimeDateFormat(new Date(event.nativeEvent.timestamp)),
+          birthday: TimeDateFormat(new Date(event.nativeEvent.timestamp as number)),
         },
       };
     });
@@ -264,7 +266,7 @@ class UseMessage extends React.Component<
     );
   }
 }
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: RootState) => ({
   info: state.infoSlice.info,
 });
 export default connect(mapStateToProps, {})(UseMessage);

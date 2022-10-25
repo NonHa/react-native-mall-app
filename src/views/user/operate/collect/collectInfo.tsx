@@ -2,9 +2,9 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import CollectMessage from './messages';
-
+import type { CollectTabParamList } from '#/navigation';
 export default function CollectInfo() {
-  const Tab = createMaterialTopTabNavigator();
+  const Tab = createMaterialTopTabNavigator<CollectTabParamList>();
   return (
     <Tab.Navigator
       initialRouteName="product"

@@ -1,15 +1,17 @@
 import React from 'react';
 import { Text, View, StyleSheet, TouchableHighlight } from 'react-native';
 
-export default class Detail extends React.Component {
-  constructor(props: any) {
+export default class Detail extends React.Component<{
+  detailList: { name: string }[];
+}> {
+  constructor(props: { detailList: { name: string }[] }) {
     super(props);
     this.state = {
       select: '服装',
     };
     this._press = this._press.bind(this);
   }
-  _press(item) {
+  _press(item: { name: string }) {
     this.setState({
       select: item.name,
     });

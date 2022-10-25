@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getToken, setToken } from '../../../utils/common';
 import { getUserInfo } from '../../../api/user';
+import { UserInfo } from '#/index';
 const getTokens = createAsyncThunk('/info/getToken', async () => {
   // console.log('await getToken()', await getToken());
 
@@ -12,10 +13,17 @@ const getInfo = createAsyncThunk('/info/item', async () => {
   // console.log('await getUserInfo()', message);
   return message.data || {};
 });
-const initialState = {
+const initialState: {
+  info: UserInfo;
+  value: number;
+  token: string;
+} = {
   value: 0,
-  token: null,
-  info: {},
+  token: '',
+  info: {
+    username: '',
+    levelName: '',
+  },
 };
 
 const infoSlice = createSlice({
@@ -29,7 +37,7 @@ const infoSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getTokens.fulfilled, (state, action) => {
-      state.token = action.payload;
+      state.token = action.payload as string;
     });
     builder.addCase(getInfo.fulfilled, (state, action) => {
       state.info = action.payload;

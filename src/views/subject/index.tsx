@@ -1,18 +1,20 @@
 import React from 'react';
 import { Text, View, ScrollView } from 'react-native';
 import TopDetail from './topDetail';
-import Subject from '../home/info/subject';
+import SubjectInfo from '../home/info/subject';
 import Info from '../home/info';
 import { windowHeight } from '../../utils/index';
 import { recommendSubject, recommendSubjectInfo } from '../../api/subject';
 import { SubjectItem } from './type';
-export default class Home extends React.Component<
-  any,
+import { HomeTabScreenProps } from '#/navigation';
+
+export default class Subject extends React.Component<
+  HomeTabScreenProps<'Subject'>,
   {
     recommendSubject: SubjectItem[];
   }
 > {
-  constructor(props: any) {
+  constructor(props: HomeTabScreenProps<'Subject'>) {
     super(props);
     this.state = {
       recommendSubject: [],
@@ -46,7 +48,7 @@ export default class Home extends React.Component<
                 }}
                 showBottom
                 bottom={v}>
-                <Subject {...v}></Subject>
+                <SubjectInfo {...v}></SubjectInfo>
               </Info>
             );
           })}

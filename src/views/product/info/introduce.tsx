@@ -24,8 +24,9 @@ import CoverLayer from '@/components/coverLayer';
 import BuyModel from '@/components/shopping/buyModel';
 import type { ModeRef } from '@/components/coverLayer/type';
 import type { BuyModelProps } from '@/components/shopping/type';
+import { ProductInfoTabScreenProps } from '#/navigation';
 
-export default function Introduce(props) {
+export default function Introduce(props: ProductInfoTabScreenProps<'introduce'>) {
   const params = props.route.params;
   const cover = useRef<ModeRef>(null);
   const [productInfo, changeProductInfo] = useState<

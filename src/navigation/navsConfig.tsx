@@ -25,6 +25,7 @@ import Car from '@/components/shopping/car';
 import SubmitOrder from '@/components/shopping/submitOrder';
 import Address from '@/views/user/address';
 import Order from '@/views/order';
+
 export const navsConfig: ScreenProps[] = [
   {
     name: 'Root',
@@ -67,21 +68,21 @@ export const navsConfig: ScreenProps[] = [
   {
     name: 'UseDetail',
     component: UseDetail,
-    option: ({ navigation }) => ({
+    option: ({}) => ({
       title: '个人中心',
     }),
   },
   {
     name: 'UseMessage',
     component: UseMessage,
-    option: ({ navigation }) => ({
+    option: ({}) => ({
       title: '个人信息',
     }),
   },
   {
     name: 'CollectInfo',
     component: CollectInfo,
-    option: ({ navigation }) => ({
+    option: ({}) => ({
       title: '我的收藏',
     }),
   },
@@ -117,13 +118,13 @@ export const navsConfig: ScreenProps[] = [
       title: '购物车',
     },
   },
-  {
-    name: 'SubmitOrder',
-    component: SubmitOrder,
-    option: {
-      title: '提交订单',
-    },
-  },
+  // {
+  //   name: 'SubmitOrder',
+  //   component: SubmitOrder,
+  //   option: {
+  //     title: '提交订单',
+  //   },
+  // },
   {
     name: 'Order',
     component: Order,

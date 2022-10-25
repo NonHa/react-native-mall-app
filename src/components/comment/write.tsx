@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { use } from '@react-navigation/native';
+
 import { useAppSelector } from '@/app/hooks';
 import {
   View,
@@ -11,7 +11,9 @@ import {
   ToastAndroid,
 } from 'react-native';
 import { addCommnet } from '@/api/subject';
-export default function WriteComment(props) {
+import type { RootStackScreenProps } from '#/navigation';
+
+export default function WriteComment(props: RootStackScreenProps<'WriteComment'>) {
   const params = props.route.params;
   console.log('params', params);
 

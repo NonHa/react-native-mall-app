@@ -5,13 +5,14 @@ import Introduce from './introduce';
 import Detail from './detail';
 import Evaluate from './evaluate';
 import Subject from './subject';
+import { ProductInfoTabParamList, RootStackScreenProps } from '#/navigation';
 
-export default function ProductInfo(props) {
+export default function ProductInfo(props: RootStackScreenProps<'ProductInfo'>) {
   const params = props.route.params;
-  const Tab = createMaterialTopTabNavigator();
+  const Tab = createMaterialTopTabNavigator<ProductInfoTabParamList>();
   return (
     <Tab.Navigator
-      initialRouteName="product"
+      initialRouteName="introduce"
       screenOptions={{
         lazy: true,
       }}>

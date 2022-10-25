@@ -3,9 +3,10 @@ import { Text, View, StyleSheet } from 'react-native';
 import CategoryList from './categoryList';
 import Detail from './detail';
 import { getProductList } from '../../api/category';
+import { HomeTabScreenProps } from '#/navigation';
 
-export default class Home extends React.Component {
-  constructor(props: any) {
+export default class Category extends React.Component<HomeTabScreenProps<'Category'>> {
+  constructor(props: HomeTabScreenProps<'Category'>) {
     super(props);
     this.state = {
       detailList: [],

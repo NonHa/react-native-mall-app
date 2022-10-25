@@ -16,8 +16,8 @@ import { getCollectList } from '@/api/collect';
 import { HotProps } from '@/views/home/info/type';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-
-export default function CollectMessage(props) {
+import { CollectTabScreenProps, CollectTabParamList } from '#/navigation';
+export default function CollectMessage(props: CollectTabScreenProps<keyof CollectTabParamList>) {
   const linkTo = useLinkTo();
   const info = useAppSelector((state) => state.infoSlice.info);
   const params = props.route.params;
@@ -27,7 +27,6 @@ export default function CollectMessage(props) {
   // console.log('info', info);
 
   useEffect(() => {
-    console.log('props===>', props.route);
     getList();
   }, []);
   const getList = () => {

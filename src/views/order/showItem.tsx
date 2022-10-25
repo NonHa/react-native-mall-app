@@ -16,7 +16,8 @@ import { ModeRef } from '@/components/coverLayer/type';
 import OrderComment from './comment';
 import BasePage from '@/components/BasePage';
 import { addComment } from '@/api/product';
-export default function ShowItem(props) {
+import { OrderTabScreenProps, OrderTabParamList } from '#/navigation';
+export default function ShowItem(props: OrderTabScreenProps<keyof OrderTabParamList>) {
   const params = props.route.params;
 
   const cover = useRef<ModeRef>(null);
@@ -73,7 +74,7 @@ export default function ShowItem(props) {
     }
   }
   function _onSubmit() {
-    if (params.status === 0) {
+    if (params?.status === 0) {
       payOrder({
         orderId: orderItem?.orderSn,
         orderItemIds: orderItem?.productList.map((v) => v.id),
@@ -84,7 +85,7 @@ export default function ShowItem(props) {
         }
         // console.log('orderItem', res);
       });
-    } else if (params.status === 2) {
+    } else if (params?.status === 2) {
       confirmOrder({
         orderItemIds: orderItem?.productList.map((v) => v.id),
       }).then((res) => {

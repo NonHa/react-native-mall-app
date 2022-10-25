@@ -3,13 +3,24 @@ import { Text, View, StyleSheet, Image } from 'react-native';
 import { useAppSelector } from '../../../app/hooks';
 import { connect } from 'react-redux';
 import Jump from '../jump';
+import type { RootStackScreenProps } from '#/navigation';
+import type { UserInfo } from '#/index';
+import type { RootState } from '@/store';
 
-class UseDetail extends React.Component {
-  constructor(props: any) {
+class UseDetail extends React.Component<
+  RootStackScreenProps<'UseDetail'> & {
+    info: UserInfo;
+  }
+> {
+  constructor(
+    props: RootStackScreenProps<'UseDetail'> & {
+      info: UserInfo;
+    },
+  ) {
     super(props);
     this.state = {};
   }
-  componentDidMount() {}
+
   render() {
     console.log('this.props==》', this.props.info);
     const jumpData = [
@@ -53,7 +64,7 @@ class UseDetail extends React.Component {
     );
   }
 }
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: RootState) => ({
   info: state.infoSlice.info,
 });
 export default connect(mapStateToProps, {})(UseDetail);

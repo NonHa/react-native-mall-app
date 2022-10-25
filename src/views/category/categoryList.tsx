@@ -2,8 +2,10 @@ import React from 'react';
 import { Text, View, StyleSheet, TouchableHighlight } from 'react-native';
 import { getProductList } from '../../api/category';
 
-export default class CategoryList extends React.Component {
-  constructor(props: any) {
+export default class CategoryList extends React.Component<{
+  getDetail: () => void;
+}> {
+  constructor(props: { getDetail: () => void }) {
     super(props);
     this.state = {
       list: [],
