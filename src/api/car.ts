@@ -7,10 +7,10 @@ enum Car {
 }
 
 export const getCarList = () => {
-  return Http.post(Car.carList);
+  return Http.post({ url: Car.carList });
 };
 export const confirmOrder = (data) => {
-  return Http.post(Car.confirmOrder, data);
+  return Http.post({ url: Car.confirmOrder, data });
 };
 export const generateOrder = (data: {
   memberReceiveAddressId?: number;
@@ -18,5 +18,5 @@ export const generateOrder = (data: {
   payType?: number;
   cartIds: number[];
 }) => {
-  return Http.post(Car.generateOrder, data);
+  return Http.post({ url: Car.generateOrder, data });
 };

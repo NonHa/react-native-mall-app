@@ -6,3 +6,7 @@ export const isArray = (val: any): boolean => {
   }
   return Array.isArray(val);
 };
+
+export function isFunction(val: unknown) {
+  return typeof val === 'function';
+}

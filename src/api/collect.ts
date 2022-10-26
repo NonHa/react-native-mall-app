@@ -5,5 +5,5 @@ enum Collect {
 }
 
 export const getCollectList = (data: { memberId: number; collectType: number }) => {
-  return Http.post(Collect.collectList, data);
+  return Http.post({ url: Collect.collectList, data });
 };

@@ -1,5 +1,5 @@
 import Http from '../utils/http';
 
 export const getHome = () => {
-  return Http.get('/subject/listAll');
+  return Http.get({ url: '/subject/listAll' });
 };

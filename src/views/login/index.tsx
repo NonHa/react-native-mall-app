@@ -61,7 +61,7 @@ export default function Login({ navigation }) {
     userLogin({ ...loginMes, platform: 'app' }).then((res) => {
       console.log('user-login', res);
       ToastAndroid.showWithGravityAndOffset(
-        res.message || '登录成功',
+        '登录成功',
         ToastAndroid.LONG,
         ToastAndroid.TOP,
         25,

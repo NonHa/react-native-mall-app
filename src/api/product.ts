@@ -8,10 +8,10 @@ enum Product {
 }
 
 export const getInfoById = (data: { id: number }) => {
-  return Http.get(Product.getInfoById, { params: data });
+  return Http.get({ url: Product.getInfoById, params: data });
 };
 export const getComment = (data: { id: number; pageNum: number; pageSize: number }) => {
-  return Http.get(Product.getComment, { params: data });
+  return Http.get({ url: Product.getComment, params: data });
 };
 export const addProductToCar = (data: {
   quantity: number;
@@ -22,7 +22,7 @@ export const addProductToCar = (data: {
   productSkuCode: number;
   productAttr: string;
 }) => {
-  return Http.post(Product.addProductToCar, data);
+  return Http.post({ url: Product.addProductToCar, data });
 };
 
 export const addComment = (data: {
@@ -31,5 +31,5 @@ export const addComment = (data: {
   productName: string;
   star: number;
 }) => {
-  return Http.post(Product.addComment, data);
+  return Http.post({ url: Product.addComment, data });
 };

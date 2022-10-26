@@ -7,13 +7,13 @@ enum Order {
 }
 
 export const getOrderList = (data: { status?: number } & Nagevation) => {
-  return Http.post(Order.orderList, data);
+  return Http.post({ url: Order.orderList, data });
 };
 
 export const payOrder = (data: { orderId: string; orderItemIds: number[] }) => {
-  return Http.post(Order.payOrder, data);
+  return Http.post({ url: Order.payOrder, data });
 };
 
 export const confirmOrder = (data: { orderItemIds: number[] }) => {
-  return Http.post(Order.confirmOrder, data);
+  return Http.post({ url: Order.confirmOrder, data });
 };

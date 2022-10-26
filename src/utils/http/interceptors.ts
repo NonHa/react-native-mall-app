@@ -4,10 +4,10 @@ import { StackActions } from '@react-navigation/native';
 import { ToastAndroid } from 'react-native';
 import { removeToken } from '../../utils/common';
 import { BASE_URL, UPLOAD_FILE_URL } from '../constant';
-
+import { Result } from '#/axios';
 export const ResponseInterceptors = (response: AxiosResponse) => {
   const data = response.data;
-  // console.log('response', data);
+  console.log('response', data);
   if (data.code === 401) {
     // console.log('response.code', data.code);
 
@@ -25,20 +25,12 @@ export const ResponseInterceptors = (response: AxiosResponse) => {
 
 export const RequstInterceptors = async (config: AxiosRequestConfig) => {
   const tokenObj = await getToken();
+  console.log('tokenObj', tokenObj);
 
   if (tokenObj) {
     Object.assign(config.headers, { Authorization: `Bearer ${tokenObj}` });
   }
   config.url = `${BASE_URL}${config.url}`;
-  // console.log('config', config);
 
-  // if (config.method === 'get') {
-  // console.log('method', config.params);
-  // }
-  // console.log('config==>', config);
-
-  // if (!(await getToken())) {
-  //   StackActions.replace('Home');
-  // }
   return config;
 };

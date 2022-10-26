@@ -6,12 +6,12 @@ enum Home {
   advertiseList = '/home/advertise/list',
 }
 export const getHome = () => {
-  return Http.get('/subject/listAll');
+  return Http.get({ url: '/subject/listAll' });
 };
 
 export const getBrand = (data: Nagevation) => {
-  return Http.get(Home.brandList, data);
+  return Http.get({ url: Home.brandList, data });
 };
 export const getAdvertise = (data: Nagevation) => {
-  return Http.post(Home.advertiseList, data);
+  return Http.post({ url: Home.advertiseList, data });
 };

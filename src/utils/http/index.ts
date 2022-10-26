@@ -1,42 +1,32 @@
-import axios from 'axios';
+import type { AxiosResponse } from 'axios';
 import { BASE_URL, UPLOAD_FILE_URL } from '../constant';
 import { ResponseInterceptors, RequstInterceptors } from './interceptors';
 import { ContentTypeEnum } from '@/enums/httpEnums';
 import { getToken } from '../common';
-
-const instance = axios.create({
-  // baseURL: BASE_URL,
-  timeout: 500000,
-  headers: { 'Content-Type': ContentTypeEnum.JSON },
-});
-
-// 添加请求拦截器
-instance.interceptors.request.use(
-  function (config) {
-    // 在发送请求之前做些什么
-    return RequstInterceptors(config);
+import VAxios from './VAxios';
+import { AxiosTransform } from './axiosTransform';
+import type { Result } from '#/axios';
+const transform: AxiosTransform = {
+  /**
+   * @description: 处理请求数据。如果数据不是预期格式，可直接抛出错误
+   */
+  transformRequestHook: (res: AxiosResponse<Result>) => {
+    return res.data ? res : res.data;
   },
-  function (error) {
-    // 对请求错误做些什么
-
-    return Promise.reject(error);
+  /**
+   * @description: 请求拦截器处理
+   */
+  requestInterceptors: RequstInterceptors,
+  // 请求之前处理config
+  beforeRequestHook: (config) => {
+    return config;
   },
-);
 
-instance.interceptors.response.use(
-  function (response) {
-    // console.log('response', response);
-
-    return ResponseInterceptors(response);
-    // return response;
-  },
-  function (error) {
-    // 超出 2xx 范围的状态码都会触发该函数。
-    // 对响应错误做点什么
-
-    return Promise.reject(error);
-  },
-);
+  /**
+   * @description: 响应拦截器处理
+   */
+  responseInterceptors: ResponseInterceptors,
+};
 
 export const uploadFile = (data) => {
   const formData = new FormData();
@@ -49,4 +39,9 @@ export const uploadFile = (data) => {
     headers,
   });
 };
-export default instance;
+export default new VAxios({
+  timeout: 500000,
+  headers: { 'Content-Type': ContentTypeEnum.JSON },
+  transform: transform,
+  baseURL: BASE_URL,
+});

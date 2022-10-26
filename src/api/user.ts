@@ -12,25 +12,25 @@ enum User {
 }
 
 export const userLogin = (data: { username: string; password: string; platform: string }) => {
-  return Http.post(User.login, data);
+  return Http.post({ url: User.login, data });
 };
 
 export const getUserInfo = (params) => {
-  return Http.get(User.UserInfo, { params });
+  return Http.get({ url: User.UserInfo, params });
 };
 
 export const addMemeber = (data) => {
-  return Http.post(User.addMemeber, data);
+  return Http.post({ url: User.addMemeber, data });
 };
 
 export const updateMemeber = (data: UserMessage) => {
-  return Http.post(User.updateMemeber, data);
+  return Http.post({ url: User.updateMemeber, data });
 };
 
 export const memberAddress = () => {
-  return Http.post<AddressModel[]>(User.memberAddress);
+  return Http.post<AddressModel[]>({ url: User.memberAddress });
 };
 
 export const addMemberAddress = (data) => {
-  return Http.post(User.addMemberAddress, data);
+  return Http.post({ url: User.addMemberAddress, data });
 };
