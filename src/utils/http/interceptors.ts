@@ -7,7 +7,7 @@ import { BASE_URL, UPLOAD_FILE_URL } from '../constant';
 import { Result } from '#/axios';
 export const ResponseInterceptors = (response: AxiosResponse) => {
   const data = response.data;
-  console.log('response', data);
+
   if (data.code === 401) {
     // console.log('response.code', data.code);
 
@@ -25,7 +25,6 @@ export const ResponseInterceptors = (response: AxiosResponse) => {
 
 export const RequstInterceptors = async (config: AxiosRequestConfig) => {
   const tokenObj = await getToken();
-  console.log('tokenObj', tokenObj);
 
   if (tokenObj) {
     Object.assign(config.headers, { Authorization: `Bearer ${tokenObj}` });

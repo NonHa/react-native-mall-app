@@ -32,7 +32,7 @@ const infoSlice = createSlice({
   reducers: {
     setUserInfo: (state, action) => {
       setToken(action.payload);
-      // state.info = action.payload;
+      state.token = action.payload;
     },
   },
   extraReducers: (builder) => {

@@ -6,7 +6,7 @@ import { userLogin } from '../../api/user';
 import { setUserInfo, getInfo } from '../../store/features/user/infoSlice';
 import { getToken } from '../../utils/common';
 
-import { StackActions } from '@react-navigation/native';
+import { StackActions, useNavigation, useLinkTo } from '@react-navigation/native';
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
@@ -42,19 +42,8 @@ const styles = StyleSheet.create({
 export default function Login({ navigation }) {
   const dispatch = useAppDispatch();
   const [loginMes, changeMes] = useState({ username: '15184567852', password: '123' });
-  useEffect(() => {
-    const fn = async () => {
-      const num = (await getToken()) as string;
-      // console.log('num', num);
-
-      if (num) {
-        navigation.replace('Root');
-      }
-    };
-    fn();
-    // setTimeout(, 1);
-  }, []);
-
+  // const nagivation = useNavigation();
+  const linkTo = useLinkTo();
   const login = () => {
     // return;
 
@@ -73,6 +62,7 @@ export default function Login({ navigation }) {
         setTimeout(() => {
           const resetAction = StackActions.replace('Root', res.token);
           navigation.dispatch(resetAction);
+          // nagivation.dispatch(resetAction);
         }, 500);
       }
     });

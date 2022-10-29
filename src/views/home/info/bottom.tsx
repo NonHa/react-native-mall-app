@@ -3,6 +3,7 @@ import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { useAppSelector } from '@/app/hooks';
 
 export default function Bottom(props: InfoProps) {
   return (

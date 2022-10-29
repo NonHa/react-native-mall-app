@@ -11,7 +11,9 @@ const transform: AxiosTransform = {
    * @description: 处理请求数据。如果数据不是预期格式，可直接抛出错误
    */
   transformRequestHook: (res: AxiosResponse<Result>) => {
-    return res.data ? res : res.data;
+    // console.log('res===>', res);
+
+    return res;
   },
   /**
    * @description: 请求拦截器处理

@@ -16,7 +16,7 @@ import Category from '../views/category';
 import Subject from '../views/subject';
 import UseDetail from '../views/user/message/detail';
 import UseMessage from '../views/user/message/useMessage';
-import LoginInterceptor from './intercept/LoginInterceptor.ts';
+import LoginInterceptor from './intercept/LoginInterceptor';
 import CollectInfo from '@/views/user/operate/collect/collectInfo';
 import SubjectDetail from '@/views/subject/detail';
 import WriteComment from '@/components/comment/write';
@@ -25,7 +25,7 @@ import Car from '@/components/shopping/car';
 import SubmitOrder from '@/components/shopping/submitOrder';
 import Address from '@/views/user/address';
 import Order from '@/views/order';
-
+import { removeToken } from '@/utils/common';
 export const navsConfig: ScreenProps[] = [
   {
     name: 'Root',
@@ -33,7 +33,7 @@ export const navsConfig: ScreenProps[] = [
     option: ({ navigation, route }) => ({
       title: 'Mall',
 
-      headerLeft: (props) => <Icon name="bell" size={24}></Icon>,
+      headerLeft: (props) => <Icon name="bell" size={24} onPress={() => removeToken()}></Icon>,
       headerRight: () => (
         <View style={styles.headerLeft}>
           <Icon style={styles.headerLeftIcon} name="search" size={24}></Icon>
