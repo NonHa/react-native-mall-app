@@ -7,6 +7,7 @@ import { useAppDispatch } from '../app/hooks';
 import { setUserInfo } from '../store/features/user/infoSlice';
 
 const Tab = createBottomTabNavigator();
+console.log(343);
 
 export default function BottomTabs() {
   return (
